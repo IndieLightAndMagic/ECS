@@ -24,7 +24,7 @@ namespace ECS {
 
             //Info Component
             auto entityComponentInfoRP                      = componentManager.GetComponentRaw<ECS::EntityInformationComponent_>(entityComponentInfoId);
-            auto [transformId, meshComponentId, materialId] = entityComponentInfoRP->GetRenderingTupleIds();
+            auto [meshComponentId, shaderComponentId, materialComponentId, transformMatrixComponentId] = entityComponentInfoRP->GetRasteringTupleIds();
 
             //Get Transform
             auto = componentManager.GetComponentRaw<ECS::TextureComponent_>(textureId);
