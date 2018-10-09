@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <memory>
-#include <sdlwrapper.h>
+#include <SDLWrapper/sdlwrapper.h>
 
 using namespace std;
 using namespace ECS;

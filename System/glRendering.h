@@ -7,7 +7,7 @@
 
 #include <SDL2/SDL_system.h>
 
-#include <sdlwrapper.h>
+#include <SDLWrapper/sdlwrapper.h>
 #include <ECS/Component/component.h>
 #include <ECS/Component/componentmanager.h>
 #include <ECS/Component/texturecomponent.h>
@@ -46,12 +46,11 @@ namespace ECS {
 
         public:
 
-        static unsigned long SubscribeEntity(unsigned int entityId);
-        static unsigned int DrawSprites2D();
-        static void InitRenderingSystem();
-        static void ShutdownRenderingSystem();
-
-        static void UpdateRenderingSystem();
+        static unsigned long    SubscribeEntity(unsigned int entityId);
+        static unsigned int     DrawSprites2D();
+        static void             InitRenderingSystem();
+        static void             ShutdownRenderingSystem();
+        static void             UpdateRenderingSystem();
 
     };
 

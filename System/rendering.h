@@ -7,7 +7,7 @@
 
 #include <SDL2/SDL_system.h>
 
-#include <sdlwrapper.h>
+#include <SDLWrapper/sdlwrapper.h>
 #include <ECS/Component/component.h>
 #include <ECS/Component/componentmanager.h>
 #include <ECS/Component/texturecomponent.h>

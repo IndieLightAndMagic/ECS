@@ -4,7 +4,7 @@
 #include <cxxabi.h>
 #include <string>
 
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 #include <SDL2/SDL_system.h>
 #include <SDL2/SDL_assert.h>
 #include <ECS/Entity/entity.h>
@@ -110,6 +110,16 @@ namespace ECS {
 
 
     };
+
+    class MatrixComponent_;
+    using MatrixComponent = std::shared_ptr<MatrixComponent_>;
+    class MatrixComponent_ : public Component_ {
+
+    public:
+        glm::mat4 matrix;
+
+    };
+    
 
 }
 
