@@ -5,9 +5,7 @@
 #include <utility>
 #include <algorithm>
 
-#include <SDL2/SDL_system.h>
 
-#include <SDLWrapper/sdlwrapper.h>
 #include <ECS/Component/component.h>
 #include <ECS/Component/componentmanager.h>
 #include <ECS/Component/texturecomponent.h>
@@ -30,6 +28,15 @@ namespace ECS {
             void*,                   ///anchor point relative.
             void*,                   ///anchor point correction.
             bool*>;                  ///isDirty
+
+    struct RenderingUnit {
+        /**
+         * Geometry of the Unit Under Render (UUR).
+         */
+        unsigned int vao;
+        glm::mat4x4* pTransform;
+
+    };        
 
     class RenderingSystem {
 
