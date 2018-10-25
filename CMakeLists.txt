@@ -32,7 +32,6 @@ add_library(${TARGET_NAME} STATIC
 	${CMAKE_SOURCE_DIR}/Component/componentfactory.cpp
 	${CMAKE_SOURCE_DIR}/Component/componentmanager.cpp
 	${CMAKE_SOURCE_DIR}/Component/entityinformationcomponent.cpp
-	${CMAKE_SOURCE_DIR}/Component/lifespancomponent.cpp
 	${CMAKE_SOURCE_DIR}/Component/texturecomponent.cpp
 	${CMAKE_SOURCE_DIR}/Entity/entityfactory.cpp
 	${CMAKE_SOURCE_DIR}/Entity/entitymanager.cpp
@@ -45,6 +44,7 @@ add_library(${TARGET_NAME} STATIC
 set(INC_DIR_SET 
 	${GLM_DIR}
 	${GTECH_DIR_INC}
+	${CMAKE_SOURCE_DIR}
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC 
@@ -57,11 +57,11 @@ message(STATUS "-----------------------------")
 
 
 file(MAKE_DIRECTORY ${GTECH_DIR_LIB})
-file(MAKE_DIRECTORY ${GTECH_DIR_INC_SDLWRAPPER})
+file(MAKE_DIRECTORY ${GTECH_DIR_INC_ECS})
 
 
 #POST BUILD COMMANDS 
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy lib${TARGET_NAME}.a ${GTECH_DIR_LIB}
-	COMMAND ${CMAKE_COMMAND} -E copy ${ROOT_DIR}/*.h ${GTECH_DIR_INC_SDLWRAPPER}) 
-
+	COMMAND ${CMAKE_COMMAND} -E copy -R ${ROOT_DIR}/ECS.h ${GTECH_DIR_INC_ECS}/) 
+	
