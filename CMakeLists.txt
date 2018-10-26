@@ -35,8 +35,10 @@ add_library(${TARGET_NAME} STATIC
 	${CMAKE_SOURCE_DIR}/Component/texturecomponent.cpp
 	${CMAKE_SOURCE_DIR}/Entity/entityfactory.cpp
 	${CMAKE_SOURCE_DIR}/Entity/entitymanager.cpp
+	${CMAKE_SOURCE_DIR}/Event/events.cpp
 	${CMAKE_SOURCE_DIR}/System/glRendering.cpp
 	${CMAKE_SOURCE_DIR}/System/kinematics.cpp
+	${CMAKE_SOURCE_DIR}/System/rendering.cpp
 	
 )
 set(INC_DIR_SET 

@@ -16,7 +16,6 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
-using namespace GTech;
 /* Rendering System for OpenGl 
 
 
@@ -60,12 +59,32 @@ namespace ECS {
     
     class RenderingSystem {
 
-        static unsigned long    SubscribeEntity(unsigned int entityId);
-        static unsigned int     DrawSprites2D();
-        static void             InitRenderingSystem();
-        static void             ShutdownRenderingSystem();
-        static void             UpdateRenderingSystem();
 
+    public:
+        
+        enum class Result {
+            ERROR,
+            OK
+        };
+        
+        virtual RenderingSystem::Result    SubscribeEntity(unsigned int entityId)=0;
+        virtual void                       Draw()=0;
+        virtual RenderingSystem::Result    RemoveEntity(unsigned int entityId)=0;
+        virtual RenderingSystem::Result    Stop()=0;
+        
+
+    };
+
+    class GlRenderingSystem : RenderingSystem{
+
+
+    public:
+
+        RenderingSystem::Result    SubscribeEntity(unsigned int entityId) override;
+        void                       Draw() override;
+        RenderingSystem::Result    RemoveEntity(unsigned int entityId) override;
+        RenderingSystem::Result    Stop() override;
+    
     };
 
 }
