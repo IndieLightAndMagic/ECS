@@ -8,7 +8,6 @@
 #include <SDL2/SDL_system.h>
 #include <SDL2/SDL_assert.h>
 #include <ECS/Entity/entity.h>
-#include <timer.h>
 
 
 namespace ECS {
@@ -90,26 +89,6 @@ namespace ECS {
             void SetAnchorPoint(glm::vec3 anchorPoint, glm::vec3 box);
     };
 
-
-    class LifeSpanComponent_;
-    using LifeSpanComponent = std::shared_ptr<LifeSpanComponent_>;
-    class LifeSpanComponent_ : public Component_ {
-
-    private:
-
-        ECS::TimedEvent_ m_te;
-
-
-    public:
-
-        void Set(float ms);
-        void Update();
-        GTech::Signal<> onLifeSpanEnded;
-
-
-
-
-    };
 
     class MatrixComponent_;
     using MatrixComponent = std::shared_ptr<MatrixComponent_>;

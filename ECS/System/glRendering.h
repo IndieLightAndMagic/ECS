@@ -57,39 +57,8 @@ using namespace GTech;
 
 namespace ECS {
     
-    using RenderingDataTuple = std::tuple<
-            unsigned int,            ///ids
-            SDL_Texture*,            ///textures
-            const unsigned long*,    ///textureSizes
-            void*,                   ///positions. void* because because tuple wouldn't handle &glm::vec3.
-            void*,                   ///angles per axis. void* because because tuple wouldn't handle &glm::vec3.
-            void*,                   ///anchor point relative.
-            void*,                   ///anchor point correction.
-            bool*>;                  ///isDirty
-
-    struct RenderingTuple {
-        
-        unsigned int vao;
-        unsigned int shdr;
-        glm::mat4x4* ptmtx;
-        void* pmat;
-
-    };        
-
+    
     class RenderingSystem {
-
-        static std::vector<ECS::RenderingDataTuple> renderingData;
-
-        ////Screen Texture && Screen Rectangle
-        static SDL_Texture* pScreen;
-        static SDL_Rect pScreenRect;
-
-        ///Coordinate System: Center x to the right y up and z towards the user.
-        ///Coordinate System: width > height ? W[0,1] x H[0, height/width] : W[0, width/height] x H[0,1]
-        static glm::mat4x4 mtxSDLScreenCoordinates;
-
-
-        public:
 
         static unsigned long    SubscribeEntity(unsigned int entityId);
         static unsigned int     DrawSprites2D();
