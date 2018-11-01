@@ -1,5 +1,6 @@
+
+#include <SDLWrapper/sdlwrapper.h>
 #include <ECS/System/kinematics.h>
-#include <glm/detail/func_common.hpp>
 
 using namespace ECS;
 
@@ -61,7 +62,7 @@ void KinematicsSystem::UpdateKinematicsSystem(){
     //x(t) = 0.5 * akte * t**2 + s*t + xo
     //s(t) = akte*t + vo
     //a(t) = akte
-    static const auto TICKS_PER__SEC = SDL_GetPerformanceFrequency();
+    static const auto TICKS_PER__SEC = GTech::SDLGetPerformanceFrequency();
     static const auto SECS_PER__TICK = 1.0f / TICKS_PER__SEC;
 
     ///FPS DELIMITER
@@ -71,7 +72,8 @@ void KinematicsSystem::UpdateKinematicsSystem(){
     static const auto fFPS_TICKS_MIN = TICKS_PER__SEC * FPS_SECS___MIN;
     static const auto FPS_TICKS__MIN = static_cast<uint64_t>(fFPS_TICKS_MIN);
 
-    auto tNow = SDL_GetTicks();
+
+    auto tNow = GTech::SDLGetTicks();
     static auto tBefore = tNow;
     
     auto tDelta = static_cast<float>(tNow - tBefore);

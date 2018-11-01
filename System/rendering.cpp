@@ -1,5 +1,5 @@
 #include <tuple>
-#include "rendering.h"
+#include <ECS/System/rendering.h>
 
 using namespace ECS;
 SDL_Texture* 							RenderingSystem::pScreen = nullptr;

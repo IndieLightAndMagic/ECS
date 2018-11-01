@@ -1,7 +1,6 @@
 #ifndef __KINEMATICS_H__
 #define __KINEMATICS_H__
 
-#include <timer.h>
 #include <ECS/Entity/entitymanager.h>
 #include <ECS/Component/componentmanager.h>
 #include <ECS/Component/entityinformationcomponent.h>

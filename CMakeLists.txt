@@ -35,7 +35,6 @@ add_library(${TARGET_NAME} STATIC
 	${CMAKE_SOURCE_DIR}/Component/texturecomponent.cpp
 	${CMAKE_SOURCE_DIR}/Entity/entityfactory.cpp
 	${CMAKE_SOURCE_DIR}/Entity/entitymanager.cpp
-	${CMAKE_SOURCE_DIR}/Event/events.cpp
 	${CMAKE_SOURCE_DIR}/System/glRendering.cpp
 	${CMAKE_SOURCE_DIR}/System/kinematics.cpp
 	${CMAKE_SOURCE_DIR}/System/rendering.cpp
@@ -48,7 +47,8 @@ set(INC_DIR_SET
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC 
-	${INC_DIR_SET}    
+	${INC_DIR_SET}
+	${ROOT_DIR}    
 )
 message(STATUS "-----------------------------")
 message(STATUS "INCLUDE_DIRECTORIES: ${INC_DIR_SET}")
@@ -58,10 +58,19 @@ message(STATUS "-----------------------------")
 
 file(MAKE_DIRECTORY ${GTECH_DIR_LIB})
 file(MAKE_DIRECTORY ${GTECH_DIR_INC_ECS})
+file(MAKE_DIRECTORY ${GTECH_DIR_INC_ECS}/Component)
+file(MAKE_DIRECTORY ${GTECH_DIR_INC_ECS}/System)
+file(MAKE_DIRECTORY ${GTECH_DIR_INC_ECS}/Entity)
+
 
 
 #POST BUILD COMMANDS 
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy lib${TARGET_NAME}.a ${GTECH_DIR_LIB}
-	COMMAND ${CMAKE_COMMAND} -E copy -R ${ROOT_DIR}/ECS.h ${GTECH_DIR_INC_ECS}/) 
+	COMMAND ${CMAKE_COMMAND} -E copy ${ROOT_DIR}/ECS/*.h ${GTECH_DIR_INC_ECS}/
+	COMMAND ${CMAKE_COMMAND} -E copy ${ROOT_DIR}/ECS/Component/*.h ${GTECH_DIR_INC_ECS}/Component/
+	COMMAND ${CMAKE_COMMAND} -E copy ${ROOT_DIR}/ECS/System/*.h ${GTECH_DIR_INC_ECS}/System/
+	COMMAND ${CMAKE_COMMAND} -E copy ${ROOT_DIR}/ECS/Entity/*.h ${GTECH_DIR_INC_ECS}/Entity/
+	
+	) 
 	
