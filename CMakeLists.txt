@@ -38,6 +38,7 @@ add_library(${TARGET_NAME} STATIC
 	${CMAKE_SOURCE_DIR}/System/glRendering.cpp
 	${CMAKE_SOURCE_DIR}/System/kinematics.cpp
 	${CMAKE_SOURCE_DIR}/System/rendering.cpp
+	${CMAKE_SOURCE_DIR}/System/sceneresourcer.cpp 
 	
 )
 set(INC_DIR_SET 

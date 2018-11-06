@@ -103,7 +103,7 @@ namespace ECS {
     using VaoArrayComponent = std::shared_ptr<VaoArrayComponent_>;
     class VaoArrayComponent_ : public Component_ {
     public:
-        std::weak_ptr<int>vaoarray;
+        std::weak_ptr<unsigned int>vaoarray;
 
     };
 
