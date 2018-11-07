@@ -4,7 +4,6 @@
 #include <vector>
 #include <tuple>
 #include <ECS/Component/component.h>
-#include <ECS/Component/componentmanager.h>
 
 namespace ECS {
 

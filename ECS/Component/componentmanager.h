@@ -3,11 +3,10 @@
 #include <map>
 #include <memory>
 #include <iostream>
-#include "component.h"
-#include "ECS/Entity/entitymanager.h"
-#include "componentfactory.h"
-#include "entityinformationcomponent.h"
-#include <memory>
+
+#include <ECS/Entity/entitymanager.h>
+#include <ECS/Component/componentfactory.h>
+#include <ECS/Component/entityinformationcomponent.h>
 #include <SDL2/SDL_assert.h>
 
 
@@ -23,7 +22,7 @@ namespace ECS{
 
         template <typename T> unsigned int CreateComponent(){
 
-            Component component = ECS::ComponentFactory::CreateComponent<T>();
+            Component component = ComponentFactory::CreateComponent<T>();
             componentMap[component->m_id] = component;
             return component->m_id;
 
@@ -38,13 +37,9 @@ namespace ECS{
             SDL_assert(ptr);
             return ptr;
 
-        }
-
-        
+        }       
 
         static const EntityInformationComponent_& GetInformationComponent(unsigned int entityId);
-
-
 
     };
     

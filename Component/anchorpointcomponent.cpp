@@ -1,7 +1,7 @@
 #include <ECS/Component/componentmanager.h>
 
 namespace ECS {
-
+	
 	void AnchorPointComponent_::SetAnchorPoint(glm::vec3 anchorPoint, glm::vec3 box)
 	{
 		SDL_assert(anchorPoint.x >= 0.0f && anchorPoint.x <= 1.0f);
