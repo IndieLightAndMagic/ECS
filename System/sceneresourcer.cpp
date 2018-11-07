@@ -96,7 +96,8 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
     if (!nodefound) return 0;
 
     // Ok node was found... start creating components.
-    auto pnode           = scene.nodes[resname];
+    auto pnode = scene.nodes[resname];
+    auto pmesh = std::dynamic_pointer_cast<GTech::Mesh>(scene.urlPtrMap[pnode->url]);
 
     // Create Mtx Component and assign the node's transform matrix (a copy).
     auto mngr            = ECS::ComponentManager::GetInstance();
@@ -110,7 +111,7 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
         //VAO
         
         //Allocate Vertex Array Objects and with with VBOs and EBOs
-        auto vaoptr = vaoMap.CreateVaoEntry(nodefullindexedname, resname, *pnode, scene);
+        auto vaoptr = vaoMap.CreateVaoEntry(nodefullindexedname, resname, *pmesh);
 
 
 
