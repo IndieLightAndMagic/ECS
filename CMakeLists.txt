@@ -36,20 +36,17 @@ add_library(${TARGET_NAME} STATIC
 	${CMAKE_SOURCE_DIR}/Entity/entityfactory.cpp
 	${CMAKE_SOURCE_DIR}/Entity/entitymanager.cpp
 	${CMAKE_SOURCE_DIR}/System/glRendering.cpp
+	${CMAKE_SOURCE_DIR}/System/glRendering_vaomap.cpp
 	${CMAKE_SOURCE_DIR}/System/kinematics.cpp
 	${CMAKE_SOURCE_DIR}/System/rendering.cpp
 	${CMAKE_SOURCE_DIR}/System/sceneresourcer.cpp 
-	
-)
-set(INC_DIR_SET 
-	${GLM_DIR}
-	${GTECH_DIR_INC}
-	${CMAKE_SOURCE_DIR}
+
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC 
-	${INC_DIR_SET}
-	${ROOT_DIR}    
+	${CMAKE_SOURCE_DIR}
+	${GLM_DIR}
+	${GTECH_DIR_INC}
 )
 message(STATUS "-----------------------------")
 message(STATUS "INCLUDE_DIRECTORIES: ${INC_DIR_SET}")

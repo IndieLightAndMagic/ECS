@@ -11,10 +11,21 @@
 #include <ECS/Component/texturecomponent.h>
 #include <ECS/Entity/entitymanager.h>
 #include <ECS/Component/entityinformationcomponent.h>
+#include <ECS/System/glRendering_vaomap.h>
+
+#include <collader/collader.h>
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+
+#ifdef __APPLE__
+#include <OpenGL/gl3.h>
+#include <OpenGL/glext.h>
+#else 
+#include <OpenGL/gl.h>
+#endif /*__APPLE__*/
+
 
 /* Rendering System for OpenGl 
 
@@ -77,14 +88,16 @@ namespace ECS {
 
     class GlRenderingSystem : RenderingSystem{
 
-
     public:
 
         RenderingSystem::Result    SubscribeEntity(unsigned int entityId) override;
         void                       Draw() override;
         RenderingSystem::Result    RemoveEntity(unsigned int entityId) override;
         RenderingSystem::Result    Stop() override;
-    
+        
+        /* -- */
+
+
     };
 
 }

@@ -1,14 +1,18 @@
-#include "sceneresourcer.h"
 
 #include <memory>
 
+#include <ECS/System/sceneresourcer.h>
 #include <ECS/Entity/entitymanager.h>
+#include <ECS/Component/componentmanager.h>
+
 #include <FS/path.h>
 #include <FS/resolver.h>
 
 
 using namespace tinyxml2;
 using namespace GTech;
+
+
 
 GTech::PairDocVisitorPtr GTech::ResourceManager::GetPairDocVisitorPtr(const std::string &resourceFilenamePathStr){
 
@@ -19,7 +23,7 @@ GTech::PairDocVisitorPtr GTech::ResourceManager::GetPairDocVisitorPtr(const std:
     return nullptr;
 }
 
-std::tuple<std::string, std::string> GTech::ResourceManager::ResourceNameResolution(const std::string& spath){
+std::tuple<std::string, std::string, std::string> GTech::ResourceManager::ResourceNameResolution(const std::string& spath){
 
     //Create Path
     auto path = GTech::filesystem::path{spath};
@@ -38,11 +42,11 @@ std::tuple<std::string, std::string> GTech::ResourceManager::ResourceNameResolut
 
     //If the path is empty or it doesn't exist return an empty string for the path and a resource name.
     if (path.empty() || !path.exists()){
-        return std::make_tuple(std::string{}, resourceName);
+        return std::make_tuple(std::string{}, std::string{}, resourceName);
     }
 
     //The path exists: return it and the resource name
-    return std::make_tuple(path.str(), resourceName);
+    return std::make_tuple(path.make_absolute().str(), path.str(), resourceName);
 
 }
 
@@ -78,37 +82,37 @@ bool GTech::ResourceManager::ResourceFileIsRegistered(const std::string& resourc
 
 unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
     
-    auto [resourceFile, resourceName] = GTech::ResourceManager::ResourceNameResolution(resourceFileName);
-    auto resourcePath                 = GTech::filesystem::path{resourceFile}.make_absolute();
-    auto resourcePathStr              = resourcePath.str();                
-
-
-    if (!GTech::ResourceManager::ResourceFileIsRegistered(resourcePathStr))
-        if (GTech::ResourceManager::RegisterResource(resourcePathStr) == false) return 0;
+    auto [absrespath, relrespath, resname] = GTech::ResourceManager::ResourceNameResolution(resourceFileName);
+    auto nodefullindexedname               = absrespath + resname;
+                                        
+    if (!GTech::ResourceManager::ResourceFileIsRegistered(absrespath))
+        if (GTech::ResourceManager::RegisterResource(absrespath) == false) return 0;
     
-    auto pPairDocVisitor = GTech::ResourceManager::GetPairDocVisitorPtr(resourcePathStr);
+    auto pPairDocVisitor = GTech::ResourceManager::GetPairDocVisitorPtr(absrespath);
     auto visitor         = pPairDocVisitor->second;
     auto scene           = visitor.GetScene();
-    auto nodefound       = scene.nodes.find(resourceName) != scene.nodes.end();
-
+    auto nodefound       = scene.nodes.find(resname) != scene.nodes.end();
+                                                                                                                                                                                                                                                                                                                                                         
     if (!nodefound) return 0;
 
     // Ok node was found... start creating components.
-    auto pnode           = scene.nodes[resourceName];
+    auto pnode           = scene.nodes[resname];
 
-    // Create Mtx Component.
-    auto matrixComponent = GTech::Node::CreateMatrixComponent(*pnode);
+    // Create Mtx Component and assign the node's transform matrix (a copy).
+    auto mngr            = ECS::ComponentManager::GetInstance();
+    auto mtxcomponentid  = mngr.CreateComponent<ECS::MatrixComponent_>();
+    auto mtxcomponentptr = mngr.GetComponentRaw<ECS::MatrixComponent_>(mtxcomponentid);
+    mtxcomponentptr->matrix = pnode->transform;
 
+    // Ok 
     if (pnode->nodeType == GTech::Node::NodeType::MESH){
 
-        auto ptr                 = scene.urlPtrMap[pnode->url];
-        auto meshptr             = std::dynamic_pointer_cast<GTech::Mesh>(ptr);
-        auto trianglearraysz     = meshptr->triangleArray.size();
-        auto uinvaoarrayptr      = std::shared_ptr<unsigned int>(new unsigned int[trianglearraysz], std::default_delete<unsigned int[]>());
+        //VAO
         
-        auto vaoarraycomponentid = GTech::Mesh::CreateVaoArrayComponent(*meshptr, scene.urlPtrMap); 
-        auto vaoarraycomponentraw = ECS::ComponentManager::GetComponentRaw<ECS::VaoArrayComponent_>(vaoarraycomponentid);
-        
+        //Allocate Vertex Array Objects and with with VBOs and EBOs
+        auto vaoptr = vaoMap.CreateVaoEntry(nodefullindexedname, resname, *pnode, scene);
+
+
 
     } else if (pnode->nodeType == GTech::Node::NodeType::CAMERA){
 

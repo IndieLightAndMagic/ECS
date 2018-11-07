@@ -40,6 +40,8 @@ namespace ECS{
 
         }
 
+        
+
         static const EntityInformationComponent_& GetInformationComponent(unsigned int entityId);
 
 

@@ -1,5 +1,6 @@
-#include "collader.h"
 
+#include "glRendering_vaomap.h"
+#include <collader/collader.h>
 #include <Resourcer/resourcer.h>
 
 #include <tuple>
@@ -23,7 +24,7 @@ namespace GTech {
     }
     
     
-    class ResourceManager : public GTech::Resourcer, public GTech::ColladaVisitor {
+    class ResourceManager : public GTech::Resourcer {
 
         ResourceManager() = default;
 
@@ -31,17 +32,22 @@ namespace GTech {
          * Map of names and shared ptrs to XMLDoc scenes.
          */
         std::map<std::string, PairDocVisitorPtr> map_SResourceName_PairDocVisitor;
-
         PairDocVisitorPtr GetPairDocVisitorPtr(const std::string& resourceFilenamePathStr);
+
+        /**
+         * Map of resources to vao arrays
+         */
+        ECS::VaoMap vaoMap;
+
 
         /**
          * @brief      Static resolution for asset integration. Suppose you have a foo.dae scene file and within it an object named "Cube". This private funciton will return a tuple of strings: ["scene.dae", "Cube"]. This function is inteded to be used within ResourceManager Class methods as it is private. 
          *
          * @param[in]  spath  The string path of the resource it could be something like ex1: "../scene.dae/Cube" or ex2: "../scene.dae" or ex3:"/Cube" and ex4:"Cube". 
          *
-         * @return For ex1 if the file "../scene.dae" actually exists the returned tuple will be ["../scene.dae", "Cube"], if it doesn't ["","Cube"]. For ex2 whether it exists or not "../scene.dae" would be correspondently ["../scene.dae", ""], ["",""]. For ex3 and ex4 ["","Cube"]    
+         * @return For ex1 if the file "../scene.dae" actually exists the returned tuple will be ["fullpath/scene.dae","../scene.dae", "Cube"], if it doesn't ["","Cube"]. For ex2 whether it exists or not "../scene.dae" would be correspondently ["../scene.dae", ""], ["",""]. For ex3 and ex4 ["","Cube"]    
          */
-        static std::tuple<std::string, std::string> ResourceNameResolution(const std::string& spath);
+        static std::tuple<std::string, std::string, std::string> ResourceNameResolution(const std::string& spath);
 
         /**
          * @brief      Check if a resource file is alredy registered.
@@ -62,6 +68,7 @@ namespace GTech {
         bool RegisterResource(const std::string& resourceFilenamePathStr);
 
         unsigned int LoadMesh(const GTech::Scene&, const GTech::Node&);
+    
     public:
         unsigned int Load(const std::string& resourceName) override;
         void UnLoad(const std::string& resourceName) override;
