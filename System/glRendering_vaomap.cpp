@@ -14,14 +14,52 @@ std::shared_ptr<unsigned int> ECS::VaoMap::CreateVaoEntry (std::string& nodefull
     
     //Ok it does not exist. Create the array in memory
     //It was not registered before... tell opengl a new memory array is ready to generate a vertex array
-    auto ptr = std::shared_ptr<unsigned int>(new unsigned int[trianglearraysz], std::default_delete<unsigned int[]>());
+    auto ptr   = std::shared_ptr<unsigned int>(new unsigned int[trianglearraysz], std::default_delete<unsigned int[]>());
     auto apair = std::make_pair(nodefullindexedname, ptr);
     vaoMap.insert(apair);
 
     //Generate the vertex array
-    glGenVertexArrays(trianglearraysz, ptr.get());
+    auto rawvaoptr = ptr.get();
+    glGenVertexArrays(trianglearraysz, rawvaoptr);
     
-    //Ok Create VBOs
+
+   
+
+    auto meshsourcemap = rMesh.meshSourceMap;
+
+    //Loop through triangle array
+    for (int triangleArrayIndex = 0; triangleArrayIndex < trianglearraysz; ++triangleArrayIndex){
+        
+        auto triangleheaderptr = rMesh.triangleArray[triangleArrayIndex];
+
+        glBindVertexArray(rawvaoptr[triangleArrayIndex]);
+        
+        //Ok Create VBOs and EBOs
+        unsigned int vbo, ebo;
+        glGenBuffers(1, &vbo);
+        glGenBuffers(1, &ebo);
+
+        //Source VBO
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * rMesh.floatVector.size(), rMesh.floatVector.data(), GL_STATIC_DRAW);
+        
+        //Source EBo
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * triangleheaderptr->indexArray.size(), triangleheaderptr->indexArray.data(), GL_STATIC_DRAW);
+
+
+        auto& triangledataptr = rMesh.triangleArray[triangleArrayIndex];
+        
+        for (auto& trianglesemantic : triangledataptr->meshTrianglesInput){
+
+            auto semantictype = trianglesemantic.semanticType;
+            auto meshsource = meshsourcemap[trianglesemantic.source];
+            auto offsetindex = meshsource->index;
+            auto triangledatasize = meshsource->pointsCount * 3 *sizeof(float);
+
+
+        }
+    }
     
 
     return vaoMap[nodefullindexedname];
