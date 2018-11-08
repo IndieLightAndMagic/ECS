@@ -61,6 +61,7 @@ std::shared_ptr<unsigned int> ECS::VaoMap::CreateVaoEntry (std::string& nodefull
         }
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindVertexArray(0);
 
     }
     
