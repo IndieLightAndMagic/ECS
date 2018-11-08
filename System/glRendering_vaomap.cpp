@@ -47,19 +47,21 @@ std::shared_ptr<unsigned int> ECS::VaoMap::CreateVaoEntry (std::string& nodefull
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * triangleheaderptr->indexArray.size(), triangleheaderptr->indexArray.data(), GL_STATIC_DRAW);
 
-        auto& triangledataptr = rMesh.triangleArray[triangleArrayIndex];
+        auto& triangledataptr  = rMesh.triangleArray[triangleArrayIndex];
         
         for (auto& trianglesemantic : triangledataptr->meshTrianglesInput){
 
             const auto& semantictype    = (unsigned int)trianglesemantic.semanticType;
             const auto& meshsourceptr   = meshsourcemap[trianglesemantic.source];
-            auto* const offsetaddress    = &(reinterpret_cast<const float*>(meshdataptr))[meshsourceptr->index];
-            const auto stridesz         = (int)(meshsourceptr->stride * sizeof(float));
+            auto* const offsetaddress   = &(reinterpret_cast<const float*>(meshdataptr))[meshsourceptr->index];
             const auto triangledatasize = (int)(meshsourceptr->pointsCount * 3 *sizeof(float));
 
-            glVertexAttribPointer(semantictype, triangledatasize, GL_FLOAT, GL_FALSE, stridesz, offsetaddress);
+            glVertexAttribPointer(semantictype, triangledatasize, GL_FLOAT, GL_FALSE, 0, offsetaddress);
 
         }
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
     }
     
 
