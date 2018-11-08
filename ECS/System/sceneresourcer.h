@@ -41,22 +41,13 @@ namespace GTech {
 
 
         /**
-         * @brief      Static resolution for asset integration. Suppose you have a foo.dae scene file and within it an object named "Cube". This private funciton will return a tuple of strings: ["scene.dae", "Cube"]. This function is inteded to be used within ResourceManager Class methods as it is private. 
-         *
-         * @param[in]  spath  The string path of the resource it could be something like ex1: "../scene.dae/Cube" or ex2: "../scene.dae" or ex3:"/Cube" and ex4:"Cube". 
-         *
-         * @return For ex1 if the file "../scene.dae" actually exists the returned tuple will be ["fullpath/scene.dae","../scene.dae", "Cube"], if it doesn't ["","Cube"]. For ex2 whether it exists or not "../scene.dae" would be correspondently ["../scene.dae", ""], ["",""]. For ex3 and ex4 ["","Cube"]    
-         */
-        static std::tuple<std::string, std::string, std::string> ResourceNameResolution(const std::string& spath);
-
-        /**
          * @brief      Check if a resource file is alredy registered.
          *
          * @param[in]  resourceFilenamePathStr  path to file to be checked if already registered.
          *
          * @return     If file is already registered on system true will be returnerd.
          */
-        bool ResourceFileIsRegistered(const std::string& resourceFilenamePathStr);
+        bool ResourceFileHasPairDocVisitorEntryRegistered(const std::string& resourceFilenamePathStr);
 
         /**
          * @brief      Register the assets of a filename. It will register the file and preload the assets. 
@@ -65,7 +56,7 @@ namespace GTech {
          *
          * @return     On success will return true otherwise.... 
          */
-        bool RegisterResource(const std::string& resourceFilenamePathStr);
+        bool RegisterPairDocVisitorEntry(const std::string& resourceFilenamePathStr);
 
         unsigned int LoadMesh(const GTech::Scene&, const GTech::Node&);
     

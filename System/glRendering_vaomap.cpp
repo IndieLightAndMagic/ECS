@@ -37,15 +37,11 @@ std::shared_ptr<unsigned int> ECS::VaoMap::CreateVaoEntry (std::string& nodefull
         //Ok Create VBOs and EBOs
         unsigned int vbo, ebo;
         glGenBuffers(1, &vbo);
-        glGenBuffers(1, &ebo);
 
         //Source VBO
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * rMesh.floatVector.size(), meshdataptr, GL_STATIC_DRAW);
         
-        //Source EBo
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * triangleheaderptr->indexArray.size(), triangleheaderptr->indexArray.data(), GL_STATIC_DRAW);
 
         auto& triangledataptr  = rMesh.triangleArray[triangleArrayIndex];
         
@@ -59,9 +55,15 @@ std::shared_ptr<unsigned int> ECS::VaoMap::CreateVaoEntry (std::string& nodefull
             glVertexAttribPointer(semantictype, triangledatasize, GL_FLOAT, GL_FALSE, 0, offsetaddress);
 
         }
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+
+        //Source EBo
+        glGenBuffers(1, &ebo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * triangleheaderptr->indexArray.size(), triangleheaderptr->indexArray.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 
     }
     

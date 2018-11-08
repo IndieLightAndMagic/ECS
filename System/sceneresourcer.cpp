@@ -16,43 +16,17 @@ using namespace GTech;
 
 GTech::PairDocVisitorPtr GTech::ResourceManager::GetPairDocVisitorPtr(const std::string &resourceFilenamePathStr){
 
-    if (GTech::ResourceManager::ResourceFileIsRegistered(resourceFilenamePathStr)){
+    if (GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(resourceFilenamePathStr)){
         return map_SResourceName_PairDocVisitor[resourceFilenamePathStr];
     }
 
     return nullptr;
 }
 
-std::tuple<std::string, std::string, std::string> GTech::ResourceManager::ResourceNameResolution(const std::string& spath){
 
-    //Create Path
-    auto path = GTech::filesystem::path{spath};
-
-    //Create a string to store the resource name
-    std::string resourceName{};
-
-    //While the path doesn't exist and it is not empty:
-    while (!path.exists() && !path.empty()){
-        //Add path endpoint to the beginning of resourceName 
-        resourceName = resourceName.empty() ? path.filename() : path.filename() + std::string{"/"} + resourceName;
-
-        //Strip the endpoint out of path
-        path = path.parent_path();
-    }
-
-    //If the path is empty or it doesn't exist return an empty string for the path and a resource name.
-    if (path.empty() || !path.exists()){
-        return std::make_tuple(std::string{}, std::string{}, resourceName);
-    }
-
-    //The path exists: return it and the resource name
-    return std::make_tuple(path.make_absolute().str(), path.str(), resourceName);
-
-}
-
-bool GTech::ResourceManager::RegisterResource(const std::string& resourceFilenamePathStr){
+bool GTech::ResourceManager::RegisterPairDocVisitorEntry(const std::string& resourceFilenamePathStr){
     
-    if (GTech::ResourceManager::ResourceFileIsRegistered(resourceFilenamePathStr)) return true;
+    if (GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(resourceFilenamePathStr)) return true;
 
     //Resource is not registered yet. Register it. 
     auto pair_xmldoc_visitor_ptr                              = GTech::make_PairDocVisitorPtr();
@@ -68,7 +42,7 @@ bool GTech::ResourceManager::RegisterResource(const std::string& resourceFilenam
 
 }
 
-bool GTech::ResourceManager::ResourceFileIsRegistered(const std::string& resourceFilenamePathStr){
+bool GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(const std::string& resourceFilenamePathStr){
 
     auto trytofindthisresource = map_SResourceName_PairDocVisitor.find(resourceFilenamePathStr);
     auto resourcewasnotfound = map_SResourceName_PairDocVisitor.end();
@@ -82,11 +56,11 @@ bool GTech::ResourceManager::ResourceFileIsRegistered(const std::string& resourc
 
 unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
     
-    auto [absrespath, relrespath, resname] = GTech::ResourceManager::ResourceNameResolution(resourceFileName);
+    auto [absrespath, relrespath, resname] = GTech::filesystem::resolver::ResourceNameResolution(resourceFileName);
     auto nodefullindexedname               = absrespath + resname;
                                         
-    if (!GTech::ResourceManager::ResourceFileIsRegistered(absrespath))
-        if (GTech::ResourceManager::RegisterResource(absrespath) == false) return 0;
+    if (!GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(absrespath))
+        if (GTech::ResourceManager::RegisterPairDocVisitorEntry(absrespath) == false) return 0;
     
     auto pPairDocVisitor = GTech::ResourceManager::GetPairDocVisitorPtr(absrespath);
     auto visitor         = pPairDocVisitor->second;
@@ -110,7 +84,7 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
 
         //VAO
         
-        //Allocate Vertex Array Objects and with with VBOs and EBOs
+        //Allocate Vertex Array Objects VAO and with  VBOs and EBOs
         auto vaoptr = vaoMap.CreateVaoEntry(nodefullindexedname, resname, *pmesh);
 
 
