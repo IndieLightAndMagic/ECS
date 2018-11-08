@@ -22,7 +22,7 @@ namespace ECS {
     
     class VaoMap {
     public:
-        std::shared_ptr<unsigned int> CreateVaoEntry(std::string& fullindexedname, std::string& resname, const GTech::Mesh& rMesh);
+        std::shared_ptr<unsigned int> CreateVaoEntry(std::string& fullindexedname, const GTech::Mesh& rMesh);
     protected:
         std::map<std::string, std::shared_ptr<unsigned int>>vaoMap;
     };

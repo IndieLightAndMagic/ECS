@@ -83,9 +83,8 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
     if (pnode->nodeType == GTech::Node::NodeType::MESH){
 
         //VAO
-        
         //Allocate Vertex Array Objects VAO and with  VBOs and EBOs
-        auto vaoptr = vaoMap.CreateVaoEntry(nodefullindexedname, resname, *pmesh);
+        auto vaoptr = vaoMap.CreateVaoEntry(nodefullindexedname, *pmesh);
 
 
 
