@@ -44,8 +44,8 @@ bool GTech::ResourceManager::RegisterPairDocVisitorEntry(const std::string& reso
 
 bool GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(const std::string& resourceFilenamePathStr){
 
-    auto trytofindthisresource = map_SResourceName_PairDocVisitor.find(resourceFilenamePathStr);
-    auto resourcewasnotfound = map_SResourceName_PairDocVisitor.end();
+    auto trytofindthisresource       = map_SResourceName_PairDocVisitor.find(resourceFilenamePathStr);
+    auto resourcewasnotfound         = map_SResourceName_PairDocVisitor.end();
     auto resourceisalreadyregistered = trytofindthisresource != resourcewasnotfound;
     if (resourceisalreadyregistered) return true;
 
@@ -87,10 +87,9 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
         auto vaoptr = vaoMap.CreateVaoEntry(nodefullindexedname, *pmesh);
 
 
-
     } else if (pnode->nodeType == GTech::Node::NodeType::CAMERA){
 
-
+        
 
     } else if (pnode->nodeType == GTech::Node::NodeType::LIGHT) {
 
