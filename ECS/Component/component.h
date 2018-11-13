@@ -3,6 +3,7 @@
 
 #include <cxxabi.h>
 #include <string>
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <SDL2/SDL_system.h>
@@ -105,6 +106,28 @@ namespace ECS {
     public:
         std::weak_ptr<unsigned int> wkptr_vaoarray;
     };
+
+    class ShaderMaterialHeader_;
+    using ShaderInputHeader = std::shared_ptr<ShaderMaterialHeader_>;
+    class ShaderMaterialHeader_{
+
+        //Ambient lightning
+        float fAmbientLight{0.1f};
+        float* pfAmbientLight{&fAmbientLight};
+
+        //Diffuse lightning: This depends mostly on the normal vector (the Vao will provide that info through the vertex shader)
+        //and the position of the light(s). The material header may provide information about the general color of the material or
+        //the diffuse color:
+        glm::vec3 diffuseColor{1.0f, 1.0f, 1.0f};    //White
+
+        //Specular lightning: it depends entirely on the camera's (viewer's) position, so the camera's MatrixComponent will provide such information.
+        //It also depends on the shininess of the material
+        float fShininess{0.1f};
+        float* pFloatShininess{&fShininess};  
+
+        
+    };
+
 
 }
 
