@@ -26,6 +26,7 @@ namespace ECS {
     protected:
         std::map<std::string, std::shared_ptr<unsigned int>>vaoMap;
     };
+    
 }
 
 #endif

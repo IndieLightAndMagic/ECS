@@ -74,7 +74,10 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
     auto pmesh = std::dynamic_pointer_cast<GTech::Mesh>(scene.urlPtrMap[pnode->url]);
 
     // Create Mtx Component and assign the node's transform matrix (a copy).
+    // Invoke component manager.
     auto mngr            = ECS::ComponentManager::GetInstance();
+    
+    // Create Mtx Component using the component manager.
     auto mtxcomponentid  = mngr.CreateComponent<ECS::MatrixComponent_>();
     auto mtxcomponentptr = mngr.GetComponentRaw<ECS::MatrixComponent_>(mtxcomponentid);
     mtxcomponentptr->matrix = pnode->transform;
@@ -84,12 +87,20 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
 
         //VAO
         //Allocate Vertex Array Objects VAO and with  VBOs and EBOs
-        auto vaoptr = vaoMap.CreateVaoEntry(nodefullindexedname, *pmesh);
-
+        auto vaoptr               = vaoMap.CreateVaoEntry(nodefullindexedname, *pmesh);
+        auto vaoarraycomponentid  = mngr.CreateComponent<ECS::VaoArrayComponent_>();
+        auto vaoarraycomponentptr = mngr.GetComponentRaw<ECS::VaoArrayComponent_>(vaoarraycomponentid);
+        
+        //Assign load.
+        vaoarraycomponentptr->wkptr_vaoarray = vaoptr;        
 
     } else if (pnode->nodeType == GTech::Node::NodeType::CAMERA){
 
-        
+        //We need to create the projection matrix
+        auto prjmtx = 
+        auto prjcomponentid = mngr.CreateComponent<ECS::MatrixComponent_>();
+        auto prjcomponentptr = mngr.GetComponentRaw<ECS::MatrixComponent_>(prjcomponentid);
+
 
     } else if (pnode->nodeType == GTech::Node::NodeType::LIGHT) {
 

@@ -118,14 +118,32 @@ namespace ECS {
         //Diffuse lightning: This depends mostly on the normal vector (the Vao will provide that info through the vertex shader)
         //and the position of the light(s). The material header may provide information about the general color of the material or
         //the diffuse color:
-        glm::vec3 diffuseColor{1.0f, 1.0f, 1.0f};    //White
-
+        glm::vec4 diffuseColor;    //White
+        glm::vec4* pDiffuseColor{&diffuseColor};
         //Specular lightning: it depends entirely on the camera's (viewer's) position, so the camera's MatrixComponent will provide such information.
         //It also depends on the shininess of the material
         float fShininess{0.1f};
         float* pFloatShininess{&fShininess};  
 
+        //Emission light
+        glm::vec4 emissionColor;
+        glm::vec4* pEmissionColor{&emissionColor};
+
+        //Specular color emission
+        glm::vec4 specularColor;
+        glm::vec4* pSpecularColor;
+
+        //Reflective Color
+        glm::vec4 reflectiveColor;
+        glm::vec4* pReflectiveColor;
+
+        float frefractionindex;
+        float* prefractionindex{&frefractionindex};
+
         
+
+
+
     };
 
 
