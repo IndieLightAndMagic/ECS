@@ -22,3 +22,26 @@ void EntityInformationComponent_::SetRenderingTupleIds(unsigned int posId, unsig
     m_renderingTupleIds = tuple<unsigned  int, unsigned int, unsigned int, unsigned int>{posId, anglePositionId, anchorId, textureId};
 }
 
+std::tuple<unsigned int, unsigned int> EntityInformationComponent_::GetGlCamTuple() const{
+	return m_2ui;
+}
+
+void EntityInformationComponent_::SetGlCamTuple(unsigned int viewMatrixId, unsigned int projectionMatrixId){
+	m_2ui = tuple<unsigned int, unsigned int>{viewMatrixId, projectionMatrixId};
+}
+
+std::tuple<unsigned int, unsigned int> EntityInformationComponent_::GetGlLightTuple() const{
+	return m_2ui;
+}
+
+void EntityInformationComponent_::SetGlLightTuple(unsigned int transforMatrixId, unsigned int shaderLightHeaderId){
+	m_2ui = tuple<unsigned int, unsigned int>{transforMatrixId, shaderLightHeaderId};
+}
+
+std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> EntityInformationComponent_::GetGlGeometryTuple() const{
+	return m_4ui;
+}
+
+void EntityInformationComponent_::SetGlGeometryTuple(unsigned int transformMatrixId, unsigned int vaoArrayId, unsigned int shaderMaterialHeaderId, unsigned int shaderId) {
+	m_4ui = tuple<unsigned int, unsigned int, unsigned int, unsigned int>{transformMatrixId, vaoArrayId, shaderMaterialHeaderId, shaderId};
+}

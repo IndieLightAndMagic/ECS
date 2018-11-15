@@ -100,20 +100,23 @@ namespace ECS {
 
     };
     
+    
+    class ShaderMaterialHeaderComponent_;
+    using ShaderMaterialHeaderComponent = std::shared_ptr<ShaderMaterialHeaderComponent_>;
+    
     class VaoArrayComponent_;
     using VaoArrayComponent = std::shared_ptr<VaoArrayComponent_>;
     class VaoArrayComponent_ : public Component_ {
     public:
         std::weak_ptr<unsigned int> wkptr_vaoarray;
+        std::vector<ShaderMaterialHeaderComponent> materialheadercomponentptr_vtor;   
     };
 
-    class ShaderMaterialHeader_;
-    using ShaderInputHeader = std::shared_ptr<ShaderMaterialHeader_>;
-    class ShaderMaterialHeader_{
-
+    class ShaderMaterialHeaderComponent_ : public Component_{
+    public:
         //Ambient lightning
         float fAmbientLight{0.1f};
-        float* pfAmbientLight{&fAmbientLight};
+        float* pAmbientLight{&fAmbientLight};
 
         //Diffuse lightning: This depends mostly on the normal vector (the Vao will provide that info through the vertex shader)
         //and the position of the light(s). The material header may provide information about the general color of the material or
@@ -123,7 +126,7 @@ namespace ECS {
         //Specular lightning: it depends entirely on the camera's (viewer's) position, so the camera's MatrixComponent will provide such information.
         //It also depends on the shininess of the material
         float fShininess{0.1f};
-        float* pFloatShininess{&fShininess};  
+        float* pShininess{&fShininess};  
 
         //Emission light
         glm::vec4 emissionColor;
@@ -137,15 +140,37 @@ namespace ECS {
         glm::vec4 reflectiveColor;
         glm::vec4* pReflectiveColor;
 
+        //Refraction Index
         float frefractionindex;
         float* prefractionindex{&frefractionindex};
-
-        
-
 
 
     };
 
+    class ShaderLightHeaderComponent_;
+    using ShaderLightHeaderComponent = std::shared_ptr<ShaderLightHeaderComponent_>;
+    class ShaderLightHeaderComponent_ : public Component_{
+    public:
+        //factors
+        float fAttenuationBase{1.0f};
+        float* pAttenuationBase{&fAttenuationBase};
+        int iAttenuationExponent{0};
+        int* pAttenuationExponent{&iAttenuationExponent};
+
+        float fAttenuationFactor; 
+        float* pAttenuationFactor{&fAttenuationFactor};
+
+
+        glm::vec4 lightColor;
+        glm::vec4* pLightColor{&lightColor};
+
+        bool directional{false};
+        union {
+            glm::vec4 direction;
+            glm::vec4 position;
+        }light;
+    
+    };
 
 }
 

@@ -1,5 +1,7 @@
 
 #include <ECS/System/glRendering_loader.h>
+#include <ECS/System/glRendering_material.h>
+
 #include <collader/collader.h>
 #include <Resourcer/resourcer.h>
 
@@ -38,7 +40,7 @@ namespace GTech {
          * Map of resources to vao arrays
          */
         ECS::VaoMap vaoMap;
-        
+        ECS::ShaderMaterialMap materialMap;
         /**
          * @brief      Check if a resource file is alredy registered.
          *

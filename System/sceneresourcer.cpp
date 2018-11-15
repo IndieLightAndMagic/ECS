@@ -71,45 +71,86 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
 
     // Ok node was found... start creating components.
     auto pnode = scene.nodes[resname];
-    auto pmesh = std::dynamic_pointer_cast<GTech::Mesh>(scene.urlPtrMap[pnode->url]);
-
+    
     // Create Mtx Component and assign the node's transform matrix (a copy).
     // Invoke component manager.
-    auto mngr            = ECS::ComponentManager::GetInstance();
-    
+    auto& componentmngr = ECS::ComponentManager::GetInstance();
+    auto& entitymngr   = ECS::EntityManager::GetInstance();
+
+    //Create entity and get its info component
+    auto eid = entitymngr.CreateEntity(); //entityid
+    auto infocomponentid = entitymngr.GetComponentsIds(eid)[0];
+    auto infocomponentptr = componentmngr.GetComponentRaw<ECS::EntityInformationComponent_>(infocomponentid);
+
     // Create Mtx Component using the component manager.
-    auto mtxcomponentid  = mngr.CreateComponent<ECS::MatrixComponent_>();
-    auto mtxcomponentptr = mngr.GetComponentRaw<ECS::MatrixComponent_>(mtxcomponentid);
+    auto mtxcomponentid  = componentmngr.CreateComponent<ECS::MatrixComponent_>();
+    auto mtxcomponentptr = componentmngr.GetComponentRaw<ECS::MatrixComponent_>(mtxcomponentid);
     mtxcomponentptr->matrix = pnode->transform;
 
+    entitymngr.AddComponent(eid, mtxcomponentid);    //Ok now we have a transform matrix. 
+    
     // Ok 
     if (pnode->nodeType == GTech::Node::NodeType::MESH){
 
-        //VAO
-        //Allocate Vertex Array Objects VAO and with  VBOs and EBOs
-        auto vaoptr               = vaoMap.CreateVaoEntry(nodefullindexedname, *pmesh);
-        auto vaoarraycomponentid  = mngr.CreateComponent<ECS::VaoArrayComponent_>();
-        auto vaoarraycomponentptr = mngr.GetComponentRaw<ECS::VaoArrayComponent_>(vaoarraycomponentid);
-        
-        //Assign load.
-        vaoarraycomponentptr->wkptr_vaoarray = vaoptr;        
+        //VAO array component
+        auto vaoarraycomponentid  = componentmngr.CreateComponent<ECS::VaoArrayComponent_>();
+        auto vaoarraycomponentptr = componentmngr.GetComponentRaw<ECS::VaoArrayComponent_>(vaoarraycomponentid);
+
+        //Allocate Vertex Array Objects VAO and with  VBOs and EBOs. Create a Vector with pointers and assign them to the component.
+        auto pmesh                                            = std::dynamic_pointer_cast<GTech::Mesh>(scene.urlPtrMap[pnode->url]);
+        auto vaoptr                                           = vaoMap.CreateVaoEntry(nodefullindexedname, *pmesh);
+        auto shaderMaterialPtrVector                          = materialMap.RegisterShaderMaterialHeaderEntries(nodefullindexedname, *pmesh, scene.urlPtrMap);
+        vaoarraycomponentptr->wkptr_vaoarray                  = vaoptr;
+        vaoarraycomponentptr->materialheadercomponentptr_vtor = shaderMaterialPtrVector;
 
     } else if (pnode->nodeType == GTech::Node::NodeType::CAMERA){
 
-        //We need to create the projection matrix
-        auto prjmtx = 
-        auto prjcomponentid = mngr.CreateComponent<ECS::MatrixComponent_>();
-        auto prjcomponentptr = mngr.GetComponentRaw<ECS::MatrixComponent_>(prjcomponentid);
+        //We need to create the projection matrix component.
+        auto prjcomponentid  = componentmngr.CreateComponent<ECS::MatrixComponent_>();
+        auto prjcomponentptr = componentmngr.GetComponentRaw<ECS::MatrixComponent_>(prjcomponentid);
 
+
+        //Lets assign a proper projection matrix.
+        auto pcam               = std::dynamic_pointer_cast<GTech::Camera>(scene.urlPtrMap[pnode->url]);
+        auto fovy               = pcam->projection.yfov;
+        auto aspect             = pcam->aspect_ratio;
+        auto znear              = pcam->znear;
+        auto zfar               = pcam->zfar;
+        prjcomponentptr->matrix = glm::perspective(glm::radians(fovy), aspect, znear, zfar);
+
+        entitymngr.AddComponent(eid, prjcomponentid); //Projection matrix component for camera.
+        infocomponentptr->SetGlCamTuple(mtxcomponentid, prjcomponentid); //Set the appropriate components for your camera entity.
+        return eid;
 
     } else if (pnode->nodeType == GTech::Node::NodeType::LIGHT) {
 
+        auto lightcomponentid = componentmngr.CreateComponent<ECS::ShaderLightHeaderComponent_>();
+        auto lightcomponentptr = componentmngr.GetComponentRaw<ECS::ShaderLightHeaderComponent_>(lightcomponentid);
 
+        auto plight = std::dynamic_pointer_cast<GTech::Light>(scene.urlPtrMap[pnode->url]); 
 
+        lightcomponentptr->directional = plight->lightType == GTech::Light::LightType::SUN;
+        if (plight->quadratic_attenuation > 0.0f) {
+
+            lightcomponentptr->iAttenuationExponent = 2;
+            lightcomponentptr->fAttenuationBase = plight->quadratic_attenuation;
+
+        } else if (plight->linear_attenuaton > 0.0f) {
+
+            lightcomponentptr->iAttenuationExponent = 1;
+            lightcomponentptr->fAttenuationBase = plight->linear_attenuaton;
+
+        } else {
+
+            lightcomponentptr->iAttenuationExponent = 0;
+            lightcomponentptr->fAttenuationBase = plight->constant_attenuation;
+        }
+        lightcomponentptr->fAttenuationFactor = glm::pow(lightcomponentptr->fAttenuationBase, lightcomponentptr->iAttenuationExponent);
+
+        entitymngr.AddComponent(eid, lightcomponentid); //Add the shader light header to your lamp entity
+        infocomponentptr->SetGlLightTuple(mtxcomponentid, lightcomponentid);
+        return eid;
     }
-
-    auto entitymanager   = ECS::EntityManager::GetInstance();
-    auto eId             = entitymanager.CreateEntity();
 
     return 0;
 }

@@ -37,6 +37,7 @@ add_library(${TARGET_NAME} STATIC
 	${CMAKE_SOURCE_DIR}/Entity/entitymanager.cpp
 	${CMAKE_SOURCE_DIR}/System/glRendering.cpp
 	${CMAKE_SOURCE_DIR}/System/glRendering_loader.cpp
+	${CMAKE_SOURCE_DIR}/System/glRendering_material.cpp
 	${CMAKE_SOURCE_DIR}/System/kinematics.cpp
 	${CMAKE_SOURCE_DIR}/System/rendering.cpp
 	${CMAKE_SOURCE_DIR}/System/sceneresourcer.cpp 

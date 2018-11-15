@@ -7,6 +7,9 @@
 #include <memory>
 #include <string>
 
+#include <ECS/System/glRendering_material.h>
+
+
 #ifdef __APPLE__
 #include <OpenGL/gl3.h>
 #include <OpenGL/glext.h>
@@ -23,8 +26,7 @@ namespace ECS {
     class VaoMap {
     public:
         std::shared_ptr<unsigned int> CreateVaoEntry(std::string& fullindexedname, const GTech::Mesh& rMesh);
-    protected:
-        std::map<std::string, std::shared_ptr<unsigned int>>vaoMap;
+        static std::map<std::string, std::shared_ptr<unsigned int>>vaoMap;
     };
     
 }
