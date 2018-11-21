@@ -144,6 +144,8 @@ namespace ECS {
         float frefractionindex;
         float* prefractionindex{&frefractionindex};
 
+        //effect url
+        std::string effecturl{};
 
     };
 

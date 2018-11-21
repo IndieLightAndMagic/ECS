@@ -40,13 +40,12 @@ std::vector<ECS::ShaderMaterialHeaderComponent> ECS::ShaderMaterialMap::Register
         shadermaterialheadercomponentptr->diffuseColor = effectptr->diffuse;
         shadermaterialheadercomponentptr->specularColor = effectptr->specular;
         shadermaterialheadercomponentptr->reflectiveColor = effectptr->reflective;
-
+        shadermaterialheadercomponentptr->effecturl = absrespath + "/" + effecturl;
         //Bind the Shaders. 
         auto apair = std::make_pair(a_Material_Full_IndexedName, shadermaterialheadercomponentptr);
         materialMap.insert(apair);
         
         v.push_back(materialMap[a_Material_Full_IndexedName]);
-
     
     }
 
