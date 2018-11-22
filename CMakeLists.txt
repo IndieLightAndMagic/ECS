@@ -43,6 +43,7 @@ add_library(${TARGET_NAME} STATIC
 	${CMAKE_SOURCE_DIR}/System/sceneresourcer.cpp 
 
 )
+set(CMAKE_BUILD_TYPE debug)
 
 target_include_directories(${TARGET_NAME} PUBLIC 
 	${CMAKE_SOURCE_DIR}

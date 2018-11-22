@@ -1,9 +1,10 @@
+#ifndef __SCENERESOURCER_H__
+#define __SCENERESOURCER_H__
 
 #include <ECS/System/glRendering_loader.h>
 #include <ECS/System/glRendering_material.h>
 
 #include <collader/collader.h>
-#include <Resourcer/resourcer.h>
 
 #include <tuple>
 #include <memory>
@@ -20,15 +21,9 @@ namespace GTech {
 
     using PairDocVisitor = std::pair<tinyxml2::XMLDocument, GTech::ColladaVisitor>;
     using PairDocVisitorPtr = std::shared_ptr<PairDocVisitor>;
-    PairDocVisitorPtr make_PairDocVisitorPtr() {
-        auto ptr = std::make_shared<PairDocVisitor>();
-        return ptr; 
-    }
     
     
-    class ResourceManager : public GTech::Resourcer {
-
-        ResourceManager() = default;
+    class ResourceManager  {
 
         /**
          * Map of names and shared ptrs to XMLDoc scenes.
@@ -40,7 +35,7 @@ namespace GTech {
          * Map of resources to vao arrays
          */
         ECS::VaoMap vaoMap;
-        ECS::ShaderMaterialMap materialMap;
+        ECS::ShaderMaterialMap shaderMaterialMap;
         /**
          * @brief      Check if a resource file is alredy registered.
          *
@@ -62,11 +57,16 @@ namespace GTech {
         unsigned int LoadMesh(const GTech::Scene&, const GTech::Node&);
     
     public:
-        unsigned int Load(const std::string& resourceName) override;
-        void UnLoad(const std::string& resourceName) override;
-
+        unsigned int Load(const std::string& resourceName);
+        void UnLoad(const std::string& resourceName);
         void ClearCache();
 
+        static ResourceManager& GetInstance(){
+            static ResourceManager instance;
+            return instance;
+        }
     };
 
 }
+
+#endif //__SCENERESOURCER_H__

@@ -12,6 +12,14 @@
 using namespace tinyxml2;
 using namespace GTech;
 
+namespace GTech{
+
+    PairDocVisitorPtr make_PairDocVisitorPtr() {
+        auto ptr = std::make_shared<PairDocVisitor>();
+        return ptr; 
+    }
+
+}
 
 
 GTech::PairDocVisitorPtr GTech::ResourceManager::GetPairDocVisitorPtr(const std::string &resourceFilenamePathStr){
@@ -57,7 +65,7 @@ bool GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(const 
 unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
     
     auto [absrespath, relrespath, resname] = GTech::filesystem::resolver::ResourceNameResolution(resourceFileName);
-    auto nodefullindexedname               = absrespath + resname;
+    auto nodefullindexedname               = absrespath + std::string{"/"} + resname;
                                         
     if (!GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(absrespath))
         if (GTech::ResourceManager::RegisterPairDocVisitorEntry(absrespath) == false) return 0;
@@ -99,12 +107,12 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
         //Allocate Vertex Array Objects VAO and with  VBOs and EBOs. Create a Vector with pointers and assign them to the component.
         auto pmesh                                            = std::dynamic_pointer_cast<GTech::Mesh>(scene.urlPtrMap[pnode->url]);
         auto vaoptr                                           = vaoMap.CreateVaoEntry(nodefullindexedname, *pmesh);
-        auto shaderMaterialPtrVector                          = materialMap.RegisterShaderMaterialHeaderEntries(nodefullindexedname, *pmesh, scene.urlPtrMap);
+        auto shaderMaterialPtrVector                          = shaderMaterialMap.RegisterShaderMaterialHeaderEntries(nodefullindexedname, *pmesh, scene.urlPtrMap);
         vaoarraycomponentptr->wkptr_vaoarray                  = vaoptr;
         vaoarraycomponentptr->materialheadercomponentptr_vtor = shaderMaterialPtrVector;
         
         entitymngr.AddComponent(eid, vaoarraycomponentid);
-
+        
 
     } else if (pnode->nodeType == GTech::Node::NodeType::CAMERA){
 
@@ -123,7 +131,7 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
 
         entitymngr.AddComponent(eid, prjcomponentid); //Projection matrix component for camera.
         infocomponentptr->SetGlCamTuple(mtxcomponentid, prjcomponentid); //Set the appropriate components for your camera entity.
-        return eid;
+        
 
     } else if (pnode->nodeType == GTech::Node::NodeType::LIGHT) {
 
@@ -152,10 +160,11 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
 
         entitymngr.AddComponent(eid, lightcomponentid); //Add the shader light header to your lamp entity
         infocomponentptr->SetGlLightTuple(mtxcomponentid, lightcomponentid);
-        return eid;
-    }
+        
+    
+    } else return 0; 
 
-    return 0;
+    return eid;
 }
 
 void GTech::ResourceManager::UnLoad(const std::string &resourceName){
