@@ -1,9 +1,38 @@
 #include <tuple>
+#include <vector>
+#include <utility>
 #include <ECS/System/glRendering.h>
 
 using namespace ECS;
 
+namespace ECS{
 
+    //A struct which binds a mtx component with a material component
+    struct DrawingPair {
+
+        void* pmtx{nullptr};
+        void* pmat{nullptr};
+    };
+    using DrawingVector = std::vector<ECS::DrawingPair>; 
+    
+    struct DrawingTree {
+
+        unsigned int vao;
+        DrawingVector pairvec{};
+        ECS::DrawingPair* ppairvec{pairvec.data()};
+    
+    }; 
+
+    using VaoVector = std::vector<ECS::DrawingTree>;
+
+
+    struct  {
+    
+        ECS::VaoVector vv{};
+        ECS::DrawingTree* pvv{vv.data()};
+
+    }drawingdata; 
+}
 
 ECS::RenderingSystem::Result SubscribeEntity(unsigned int eid){
 
@@ -15,9 +44,9 @@ ECS::RenderingSystem::Result SubscribeEntity(unsigned int eid){
 
         auto [matrixid, vaoarrayid] = informationcomponent.GetGlGeometryTuple();
         auto matrixptr              = componentmanager.GetComponentRaw<ECS::MatrixComponent_>(matrixid);
-        auto vaoarrayptr            = componentmanager.GetComponentRaw<ECS::MatrixComponent_>(vaoarrayid);
+        auto vaoarrayptr            = componentmanager.GetComponentRaw<ECS::VaoArrayComponent_>(vaoarrayid);
+        
 
- 
     } else if (informationcomponent.IsCamera()){
 
         auto [matrixid, projectionmatrixid] = informationcomponent.GetGlCamTuple();
@@ -37,12 +66,34 @@ ECS::RenderingSystem::Result SubscribeEntity(unsigned int eid){
 }
 
 void Draw(){
+    
+    //For each vao
+    auto itlimit0 = drawingdata.pvv + drawingdata.vv.size();
+    for ( auto pdrawingtree = drawingdata.pvv; pdrawingtree < itlimit0; ++pdrawingtree ){
+
+        auto vao = pdrawingtree->vao;
+
+        //For each matrix,material pair
+        auto itlimit1 = pdrawingtree->ppairvec + pdrawingtree->pairvec.size();
+        for ( auto ppair = pdrawingtree->ppairvec; ppair < itlimit1; ++ppair) {
+
+            auto pmtx = reinterpret_cast<glm::mat4*>(ppair->pmtx);
+            auto pmat = reinterpret_cast<ECS::ShaderMaterialHeaderComponent_*>(ppair->pmat);
+
+            if (!pmtx || !pmat) continue;
+
+
+
+        } 
+
+
+    }    
 
 }
 
 ECS::RenderingSystem::Result RemoveEntity(unsigned int eid){
 
-
+    
     return ECS::RenderingSystem::Result::OK;
 }
 
