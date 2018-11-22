@@ -10,14 +10,33 @@ namespace ECS {
     class EntityInformationComponent_ : public Component_ {
 
         std::vector<std::tuple<unsigned int, unsigned int, unsigned int>> m_kinematicTupleIds{};
+        std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> m_renderingTupleIds{0, 0};
 
-        std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> m_renderingTupleIds;
-        std::tuple<unsigned int, unsigned int> m_2ui;
-        std::tuple<unsigned int, unsigned int, unsigned int> m_3ui;
-        std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> m_4ui;
-
+        std::tuple<unsigned int, unsigned int> m_glgeometry_tupleids{0, 0};
+        std::tuple<unsigned int, unsigned int> m_gllight_tupleids{0, 0};
+        std::tuple<unsigned int, unsigned int> m_glcam_tupleids{0, 0};
 
         public:
+        /**
+        * @brief      Determines if the entity is a geometry.
+        *
+        * @return     True if geometry, False otherwise.
+        */
+        bool IsGeometry() const;
+        /**
+         * @brief      Determines if the entity is a camera.
+         *
+         * @return     True if camera, False otherwise.
+         */
+        bool IsCamera() const;
+        /**
+         * @brief      Determines if the entity is a lamp.
+         *
+         * @return     True if lamp, False otherwise.
+         */
+        bool IsLamp() const;
+
+        
         EntityInformationComponent_() = default;
 
         /*!
