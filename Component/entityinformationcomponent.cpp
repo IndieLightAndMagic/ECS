@@ -38,10 +38,10 @@ void EntityInformationComponent_::SetGlLightTuple(unsigned int transforMatrixId,
 	m_2ui = tuple<unsigned int, unsigned int>{transforMatrixId, shaderLightHeaderId};
 }
 
-std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> EntityInformationComponent_::GetGlGeometryTuple() const{
-	return m_4ui;
+std::tuple<unsigned int, unsigned int> EntityInformationComponent_::GetGlGeometryTuple() const{
+	return m_2ui;
 }
 
-void EntityInformationComponent_::SetGlGeometryTuple(unsigned int transformMatrixId, unsigned int vaoArrayId, unsigned int shaderMaterialHeaderId, unsigned int shaderId) {
-	m_4ui = tuple<unsigned int, unsigned int, unsigned int, unsigned int>{transformMatrixId, vaoArrayId, shaderMaterialHeaderId, shaderId};
+void EntityInformationComponent_::SetGlGeometryTuple(unsigned int transformMatrixId, unsigned int vaoArrayId) {
+	m_2ui = tuple<unsigned int, unsigned int>{transformMatrixId, vaoArrayId};
 }

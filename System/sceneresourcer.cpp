@@ -112,7 +112,7 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
         vaoarraycomponentptr->materialheadercomponentptr_vtor = shaderMaterialPtrVector;
         
         entitymngr.AddComponent(eid, vaoarraycomponentid);
-        
+        infocomponentptr->SetGlGeometryTuple(mtxcomponentid, vaoarraycomponentid);
 
     } else if (pnode->nodeType == GTech::Node::NodeType::CAMERA){
 

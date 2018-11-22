@@ -12,8 +12,8 @@ namespace ECS {
         std::vector<std::tuple<unsigned int, unsigned int, unsigned int>> m_kinematicTupleIds{};
 
         std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> m_renderingTupleIds;
-
         std::tuple<unsigned int, unsigned int> m_2ui;
+        std::tuple<unsigned int, unsigned int, unsigned int> m_3ui;
         std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> m_4ui;
 
 
@@ -80,12 +80,12 @@ namespace ECS {
         void SetGlLightTuple(unsigned int transformMatrixId, unsigned int shaderLightHeaderId);
 
         /**
-         * @brief      Gets the gl geometry tuple. transform matrix id, vaoarray id, shader material header id, shader id
+         * @brief      Gets the gl geometry tuple. transform matrix component id, vaoarray component id
          *
          * @return     The gl geometry tuple. 
          */
-        std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> GetGlGeometryTuple() const;
-        void SetGlGeometryTuple(unsigned int transformMatrixId, unsigned int vaoarrayId, unsigned int shaderMaterialHeaderId, unsigned int shaderId);
+        std::tuple<unsigned int, unsigned int> GetGlGeometryTuple() const;
+        void SetGlGeometryTuple(unsigned int transformMatrixId, unsigned int vaoarrayId);
 
     };
 
