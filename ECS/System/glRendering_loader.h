@@ -25,7 +25,7 @@ namespace ECS {
     
     class VaoMap {
     public:
-        std::shared_ptr<unsigned int> CreateVaoEntry(std::string& fullindexedname, const GTech::Mesh& rMesh);
+        std::shared_ptr<unsigned int> RegisterVaoEntriesArray(std::string& fullindexedname, const GTech::Mesh& rMesh);
         static std::map<std::string, std::shared_ptr<unsigned int>>vaoMap;
     };
     

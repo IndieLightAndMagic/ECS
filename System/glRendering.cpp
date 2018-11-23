@@ -7,31 +7,21 @@ using namespace ECS;
 
 namespace ECS{
 
-    //A struct which binds a mtx component with a material component
-    struct DrawingPair {
+    struct NodeDrawingData {
 
-        void* pmtx{nullptr};
-        void* pmat{nullptr};
-    };
-    using DrawingVector = std::vector<ECS::DrawingPair>; 
-    
-    struct DrawingTree {
+        glm::mat4* pmatrix{nullptr};
+        
+        std::shared_ptr<unsigned int> vaoarrayptr;
+        unsigned int* vaoarrayptr_; //VAO0....VAON-1
 
-        unsigned int vao;
-        DrawingVector pairvec{};
-        ECS::DrawingPair* ppairvec{pairvec.data()};
-    
+        ECS::ShaderMaterialHeaderComponent pmaterialcomponent;
+        ECS::ShaderMaterialHeaderComponent_* pmaterialcomponent_; //MAT0....MATN-1
+        
+        unsigned int* psz; // Ptr to the Value of N in VAON-1 and MATN-1.    
     }; 
+    using NodeDrawingDataVector = std::vector<ECS::NodeDrawingData>;
 
-    using VaoVector = std::vector<ECS::DrawingTree>;
-
-
-    struct  {
-    
-        ECS::VaoVector vv{};
-        ECS::DrawingTree* pvv{vv.data()};
-
-    }drawingdata; 
+    NodeDrawingDataVector nodedrawingdatavector{};
 }
 
 ECS::RenderingSystem::Result SubscribeEntity(unsigned int eid){
@@ -45,7 +35,26 @@ ECS::RenderingSystem::Result SubscribeEntity(unsigned int eid){
         auto [matrixid, vaoarrayid] = informationcomponent.GetGlGeometryTuple();
         auto matrixptr              = componentmanager.GetComponentRaw<ECS::MatrixComponent_>(matrixid);
         auto vaoarrayptr            = componentmanager.GetComponentRaw<ECS::VaoArrayComponent_>(vaoarrayid);
+
+        ECS::NodeDrawingData nodedrawingdata{};
         
+        //Pointer to matrix
+        nodedrawingdata.pmatrix          = &matrixptr->matrix;
+
+        //Pointer to array of VAO0..VAON
+        nodedrawingdata.vaoarrayptr      = vaoarrayptr->wkptr_vaoarray.lock();
+        nodedrawingdata.vaoarrayptr_     = nodedrawingdata.vaoarrayptr.get();
+        if (nodedrawingdata.vaoarrayptr_ == nullptr) return ECS::RenderingSystem::Result::ERROR;
+        
+        //Pointer to array of MAT0..MATN
+        nodedrawingdata.pmaterialcomponent      = vaoarrayptr->wkptr_materialheadercomponent.lock();
+        nodedrawingdata.pmaterialcomponent_     = nodedrawingdata.pmaterialcomponent.get();
+        if (nodedrawingdata.pmaterialcomponent_ == nullptr) return ECS::RenderingSystem::Result::ERROR;
+
+        //Pointer to the size of both arrays
+        nodedrawingdata.psz = &vaoarrayptr->size;        
+
+        ECS::nodedrawingdatavector.push_back(nodedrawingdata);
 
     } else if (informationcomponent.IsCamera()){
 
@@ -67,38 +76,7 @@ ECS::RenderingSystem::Result SubscribeEntity(unsigned int eid){
 
 void Draw(){
     
-    //For each vao
-    auto itlimit0 = drawingdata.pvv + drawingdata.vv.size();
-    for ( auto pdrawingtree = drawingdata.pvv; pdrawingtree < itlimit0; ++pdrawingtree ){
 
-        auto vao = pdrawingtree->vao;
-
-        //-->ENABLE VAO
-
-        //For each matrix,material pair
-        auto itlimit1 = pdrawingtree->ppairvec + pdrawingtree->pairvec.size();
-        for ( auto ppair = pdrawingtree->ppairvec; ppair < itlimit1; ++ppair) {
-
-            auto pmtx = reinterpret_cast<glm::mat4*>(ppair->pmtx);
-            auto pmat = reinterpret_cast<ECS::ShaderMaterialHeaderComponent_*>(ppair->pmat);
-
-            if ( pmtx == nullptr || pmat == nullptr) continue;
-
-            //-->Check if shader remains the same
-            //-->If not active the new shader and plug camera and lights into it. 
-            
-            //-->Plug Material into Shader. (OPTIMIZATIONS HERE MAY APPLY)
-
-
-            //-->Draw.
-
-        }
-
-        //-->DISABLE VAO 
-
-    }
-
-    //--> SWAP AND DRAW    
 
 }
 

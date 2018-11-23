@@ -109,7 +109,8 @@ namespace ECS {
     class VaoArrayComponent_ : public Component_ {
     public:
         std::weak_ptr<unsigned int> wkptr_vaoarray;
-        std::vector<ShaderMaterialHeaderComponent> materialheadercomponentptr_vtor;   
+        std::weak_ptr<ShaderMaterialHeaderComponent_> wkptr_materialheadercomponent;
+        unsigned int size;
     };
 
     class ShaderMaterialHeaderComponent_ : public Component_{
@@ -134,11 +135,11 @@ namespace ECS {
 
         //Specular color emission
         glm::vec4 specularColor;
-        glm::vec4* pSpecularColor;
+        glm::vec4* pSpecularColor{&specularColor};
 
         //Reflective Color
         glm::vec4 reflectiveColor;
-        glm::vec4* pReflectiveColor;
+        glm::vec4* pReflectiveColor{&reflectiveColor};
 
         //Refraction Index
         float frefractionindex;

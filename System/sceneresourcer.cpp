@@ -105,12 +105,15 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
         auto vaoarraycomponentptr = componentmngr.GetComponentRaw<ECS::VaoArrayComponent_>(vaoarraycomponentid);
 
         //Allocate Vertex Array Objects VAO and with  VBOs and EBOs. Create a Vector with pointers and assign them to the component.
-        auto pmesh                                            = std::dynamic_pointer_cast<GTech::Mesh>(scene.urlPtrMap[pnode->url]);
-        auto vaoptr                                           = vaoMap.CreateVaoEntry(nodefullindexedname, *pmesh);
-        auto shaderMaterialPtrVector                          = shaderMaterialMap.RegisterShaderMaterialHeaderEntries(nodefullindexedname, *pmesh, scene.urlPtrMap);
-        vaoarraycomponentptr->wkptr_vaoarray                  = vaoptr;
-        vaoarraycomponentptr->materialheadercomponentptr_vtor = shaderMaterialPtrVector;
-        
+        auto pmesh                                          = std::dynamic_pointer_cast<GTech::Mesh>(scene.urlPtrMap[pnode->url]);
+        auto vaoentriesarrayptr                             = vaoMap.RegisterVaoEntriesArray(nodefullindexedname, *pmesh); //Shared ptr to an array of VAO0...VAOI... VAON-1
+        auto shaderMaterialPtrVector                        = shaderMaterialMap.RegisterShaderMaterialHeaderEntriesArray(nodefullindexedname, *pmesh, scene.urlPtrMap); //Sharedptr to an array of Mat0...Mat
+
+        //Ok fill out the component (THIS IS HORRIBLE CODE, SHOULD BE ENHANCED SOME TIME)
+        vaoarraycomponentptr->wkptr_vaoarray                = vaoentriesarrayptr;
+        vaoarraycomponentptr->wkptr_materialheadercomponent = shaderMaterialPtrVector;
+        vaoarraycomponentptr->size                          = pmesh->triangleArray.size();
+
         entitymngr.AddComponent(eid, vaoarraycomponentid);
         infocomponentptr->SetGlGeometryTuple(mtxcomponentid, vaoarraycomponentid);
 
