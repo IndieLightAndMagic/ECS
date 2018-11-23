@@ -73,6 +73,8 @@ void Draw(){
 
         auto vao = pdrawingtree->vao;
 
+        //-->ENABLE VAO
+
         //For each matrix,material pair
         auto itlimit1 = pdrawingtree->ppairvec + pdrawingtree->pairvec.size();
         for ( auto ppair = pdrawingtree->ppairvec; ppair < itlimit1; ++ppair) {
@@ -80,14 +82,23 @@ void Draw(){
             auto pmtx = reinterpret_cast<glm::mat4*>(ppair->pmtx);
             auto pmat = reinterpret_cast<ECS::ShaderMaterialHeaderComponent_*>(ppair->pmat);
 
-            if (!pmtx || !pmat) continue;
+            if ( pmtx == nullptr || pmat == nullptr) continue;
+
+            //-->Check if shader remains the same
+            //-->If not active the new shader and plug camera and lights into it. 
+            
+            //-->Plug Material into Shader. (OPTIMIZATIONS HERE MAY APPLY)
 
 
+            //-->Draw.
 
-        } 
+        }
 
+        //-->DISABLE VAO 
 
-    }    
+    }
+
+    //--> SWAP AND DRAW    
 
 }
 
