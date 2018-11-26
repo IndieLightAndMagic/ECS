@@ -1,13 +1,17 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
-#include <cxxabi.h>
+#include <memory>
 #include <string>
 #include <vector>
+#include <functional>
+#include <cxxabi.h>
 
 #include <glm/glm.hpp>
 #include <SDL2/SDL_system.h>
 #include <SDL2/SDL_assert.h>
+#include <ShaderMan/shdr.h>
+
 #include <ECS/Entity/entity.h>
 
 
@@ -115,6 +119,16 @@ namespace ECS {
 
     class ShaderMaterialHeaderComponent_ : public Component_{
     public:
+        
+        enum class ShaderType :  unsigned int {
+            BLINN = 0, 
+            CONSTANT = 1, 
+            LAMBERT = 2, 
+            PHONG = 3
+        };
+        //shadertype
+        ShaderMaterialHeaderComponent_::ShaderType shadertype{ShaderMaterialHeaderComponent_::ShaderType::BLINN};
+
         //Ambient lightning
         float fAmbientLight{0.1f};
         float* pAmbientLight{&fAmbientLight};
@@ -147,6 +161,12 @@ namespace ECS {
 
         //effect url
         std::string effecturl{};
+
+        //Shader Program
+        std::weak_ptr<GTech::Program> pshaderprog;
+        GTech::Program* pshaderprog_;
+        std::function<void(ECS::Component_*)> materialattachmentfunction;
+
 
     };
 

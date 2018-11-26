@@ -2,6 +2,7 @@
 #include <vector>
 #include <utility>
 #include <ECS/System/glRendering.h>
+#include <SDLWrapper/sdlwrapper.h>
 
 using namespace ECS;
 
@@ -74,9 +75,51 @@ ECS::RenderingSystem::Result SubscribeEntity(unsigned int eid){
     return ECS::RenderingSystem::Result::OK;
 }
 
-void Draw(){
+void ECS::RenderingSystem::Draw(){
     
+    auto const elementstodraw = ECS::nodedrawingdatavector.size();
+    auto nodedrawingdatavector_ = nodedrawingdatavector.data();
+    auto endofelementstodraw = nodedrawingdatavector_ + elementstodraw;
 
+
+    for(;nodedrawingdatavector_ < endofelementstodraw; ++nodedrawingdatavector_){
+
+        //Get the element shader 
+        auto pmatrix            = nodedrawingdatavector_->pmatrix;
+
+        //For each (VAO MATERIAL PAIR try to draw the VAO using the MATERIAL's registered shader).
+        auto endofiteration = nodedrawingdatavector_->vaoarrayptr_ + *nodedrawingdatavector_->psz;
+        auto vaoptr         = nodedrawingdatavector_->vaoarrayptr_;
+        auto matptr         = nodedrawingdatavector_->pmaterialcomponent_;
+        auto lastshdr       = 0;
+        for (;vaoptr < endofiteration; ++vaoptr, ++matptr){
+            
+            //Select shader for use.
+            auto shaderptr_ = matptr->pshaderprog.lock().get();
+            if (!shaderptr_) continue;
+            auto actualshdr = (*shaderptr_)();
+            if (actualshdr != lastshdr){
+                lastshdr = actualshdr;
+                shaderptr_->use();
+                matptr->pshaderprog_ = shaderptr_;
+            }
+
+            //Attach material to shader. 
+            //TODO: User should bring her/his own shader and his/her own ShaderHeaderComponent. This is not trivial.
+            matptr->materialattachmentfunction(matptr);    
+            //Set Camera.
+            //TODO: User should bring her/his own camera attaching to vertex shader. Again this is not trivial 
+
+            //Select which geometry to draw
+            glBindVertexArray(*vaoptr);
+
+        }
+
+
+    }
+
+    //Splash.
+    GTech::SDLGlSwapWindow();
 
 }
 

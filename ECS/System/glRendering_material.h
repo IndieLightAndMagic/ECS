@@ -35,8 +35,7 @@ namespace ECS {
     	 */
         std::shared_ptr<ECS::ShaderMaterialHeaderComponent_> RegisterShaderMaterialHeaderEntriesArray(std::string& fullindexedname, const GTech::Mesh& rMesh, GTech::IdMap& idmap);
         static std::map<std::string, ECS::ShaderMaterialHeaderComponent> materialMap;
-
-
+        
     };
     
 }

@@ -44,7 +44,10 @@ std::shared_ptr<ECS::ShaderMaterialHeaderComponent_> ECS::ShaderMaterialMap::Reg
             shadermaterialheadercomponentptr->specularColor    = effectptr->specular;
             shadermaterialheadercomponentptr->reflectiveColor  = effectptr->reflective;
             shadermaterialheadercomponentptr->effecturl        = absrespath + "/" + effecturl;
-            
+            shadermaterialheadercomponentptr->shadertype       = static_cast<ECS::ShaderMaterialHeaderComponent_::ShaderType>(static_cast<unsigned int>(effectptr->shaderType));
+
+             
+
             //Bind the Indexed Name with the material. 
             auto apair = std::make_pair(a_Material_Full_IndexedName, shadermaterialheadercomponentptr);
 
@@ -60,3 +63,4 @@ std::shared_ptr<ECS::ShaderMaterialHeaderComponent_> ECS::ShaderMaterialMap::Reg
     return ptr;
 
 }
+

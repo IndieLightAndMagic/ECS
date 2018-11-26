@@ -70,7 +70,6 @@ void SetVertexAttribPointers(const GTech::Mesh& rMesh, int triangleArrayIndex){
     }
 
 }
-
 std::shared_ptr<unsigned int> ECS::VaoMap::RegisterVaoEntriesArray(std::string& a_Node_fullindexedname, const GTech::Mesh& rMesh ){
     
     auto [absrespath, relrespath, resname] = GTech::filesystem::resolver::ResourceNameResolution(a_Node_fullindexedname);
