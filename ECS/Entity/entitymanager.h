@@ -5,7 +5,7 @@
 #include <map>
 
 namespace ECS {
-class EntityManager  {
+	class EntityManager  {
 
         std::map<unsigned int, Entity>entityMap;
 

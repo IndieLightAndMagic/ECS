@@ -25,7 +25,7 @@ namespace ECS{
     NodeDrawingDataVector nodedrawingdatavector{};
 }
 
-ECS::RenderingSystem::Result SubscribeEntity(unsigned int eid){
+ECS::RenderingSystem::Result ECS::GlRenderingSystem::SubscribeEntity(unsigned int eid){
 
     auto& componentmanager     = ECS::ComponentManager::GetInstance();
     auto& informationcomponent = componentmanager.GetInformationComponent(eid);
@@ -75,7 +75,7 @@ ECS::RenderingSystem::Result SubscribeEntity(unsigned int eid){
     return ECS::RenderingSystem::Result::OK;
 }
 
-void ECS::RenderingSystem::Draw(){
+void ECS::GlRenderingSystem::Draw(){
     
     auto const elementstodraw = ECS::nodedrawingdatavector.size();
     auto nodedrawingdatavector_ = nodedrawingdatavector.data();
@@ -123,13 +123,12 @@ void ECS::RenderingSystem::Draw(){
 
 }
 
-ECS::RenderingSystem::Result RemoveEntity(unsigned int eid){
-
+ECS::RenderingSystem::Result ECS::GlRenderingSystem::RemoveEntity(unsigned int eid){
     
     return ECS::RenderingSystem::Result::OK;
 }
 
-ECS::RenderingSystem::Result Stop(){
+ECS::RenderingSystem::Result ECS::GlRenderingSystem::Stop(){
 
     return ECS::RenderingSystem::Result::OK;
 }

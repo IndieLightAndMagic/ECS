@@ -33,9 +33,19 @@ namespace ECS {
     	 *
     	 * @return     A shared ptr to a vector of material components. Each component in the vector is a copy not a reference.    
     	 */
-        std::shared_ptr<ECS::ShaderMaterialHeaderComponent_> RegisterShaderMaterialHeaderEntriesArray(std::string& fullindexedname, const GTech::Mesh& rMesh, GTech::IdMap& idmap);
-        static std::map<std::string, ECS::ShaderMaterialHeaderComponent> materialMap;
+        ECS::ShaderMaterialHeaderComponent RegisterShaderMaterialHeaderEntriesArray(std::string& fullindexedname, const GTech::Mesh& rMesh, GTech::IdMap& idmap);
         
+        /**
+         * A map, to map from MATERIAL NAMES to MATERIALS. This will kept materials themselves on memory. 
+         */
+
+        static std::map<std::string, ECS::ShaderMaterialHeaderComponent_> materialname_material_map;
+
+        /**
+         * A map, to map from MESH NODE NAME to MESH NODE VECTOR of MATERIAL SHARED PTRS
+         */
+        static std::map<std::string, ECS::ShaderMaterialHeaderComponent> meshname_materialvector_map;
+
     };
     
 }

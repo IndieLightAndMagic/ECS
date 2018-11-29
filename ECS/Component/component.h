@@ -169,6 +169,11 @@ namespace ECS {
 
 
     };
+    
+    class MaterialComponent_ : public Component_{
+
+    };
+    using MaterialComponent = std::shared_ptr<MaterialComponent_>;
 
     class ShaderLightHeaderComponent_;
     using ShaderLightHeaderComponent = std::shared_ptr<ShaderLightHeaderComponent_>;

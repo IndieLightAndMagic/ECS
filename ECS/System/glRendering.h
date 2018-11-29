@@ -5,7 +5,7 @@
 #include <utility>
 #include <algorithm>
 
-
+#include <GTechUtils/weakmap.h>
 #include <ECS/Component/component.h>
 #include <ECS/Component/componentmanager.h>
 #include <ECS/Component/texturecomponent.h>
@@ -67,6 +67,7 @@
 
 namespace ECS {
     
+
     
     class RenderingSystem {
 
@@ -89,7 +90,6 @@ namespace ECS {
     class GlRenderingSystem : RenderingSystem{
 
     public:
-
         RenderingSystem::Result    SubscribeEntity(unsigned int entityId) override;
         void                       Draw() override;
         RenderingSystem::Result    RemoveEntity(unsigned int entityId) override;
@@ -100,6 +100,7 @@ namespace ECS {
 
     };
 
+    
 }
 #endif /*__RENDERING__ */
  

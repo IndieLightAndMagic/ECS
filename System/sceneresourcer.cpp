@@ -12,59 +12,9 @@
 using namespace tinyxml2;
 using namespace GTech;
 
-namespace GTech{
-
-    PairDocVisitorPtr make_PairDocVisitorPtr() {
-        auto ptr = std::make_shared<PairDocVisitor>();
-        return ptr; 
-    }
-
-}
-
-
-GTech::PairDocVisitorPtr GTech::ResourceManager::GetPairDocVisitorPtr(const std::string &resourceFilenamePathStr){
-
-    if (GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(resourceFilenamePathStr)){
-        return map_SResourceName_PairDocVisitor[resourceFilenamePathStr];
-    }
-
-    return nullptr;
-}
-
-
-bool GTech::ResourceManager::RegisterPairDocVisitorEntry(const std::string& resourceFilenamePathStr){
+unsigned int GTech::ResourceManager::Load(const std::string& resourceNameAndFileName){
     
-    if (GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(resourceFilenamePathStr)) return true;
-
-    //Resource is not registered yet. Register it. 
-    auto pair_xmldoc_visitor_ptr                              = GTech::make_PairDocVisitorPtr();
-    auto& xmldoc                                              = pair_xmldoc_visitor_ptr->first;
-    auto loadfileresult                                       = xmldoc.LoadFile(resourceFilenamePathStr.c_str());
-    auto& visitor                                             = pair_xmldoc_visitor_ptr->second;
-    auto visitor_ptr                                          = &visitor;
-
-    if (loadfileresult != tinyxml2::XML_SUCCESS) return false;
-    
-    map_SResourceName_PairDocVisitor[resourceFilenamePathStr] = pair_xmldoc_visitor_ptr; 
-    return xmldoc.Accept(visitor_ptr);
-
-}
-
-bool GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(const std::string& resourceFilenamePathStr){
-
-    auto trytofindthisresource       = map_SResourceName_PairDocVisitor.find(resourceFilenamePathStr);
-    auto resourcewasnotfound         = map_SResourceName_PairDocVisitor.end();
-    auto resourceisalreadyregistered = trytofindthisresource != resourcewasnotfound;
-    if (resourceisalreadyregistered) return true;
-
-    return false;
-}
-
-
-
-unsigned int GTech::ResourceManager::Load(const std::string& resourceFileName){
-    
-    auto [absrespath, relrespath, resname] = GTech::filesystem::resolver::ResourceNameResolution(resourceFileName);
+    auto [absrespath, relrespath, resname] = GTech::filesystem::resolver::ResourceNameResolution(resourceNameAndFileName);
     auto nodefullindexedname               = absrespath + std::string{"/"} + resname;
                                         
     if (!GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(absrespath))
