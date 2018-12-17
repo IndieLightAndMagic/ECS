@@ -7,10 +7,9 @@
 #include <FS/resolver.h>
 
 
-std::map<std::string, std::shared_ptr<unsigned int>>ECS::VaoMap::vaoMap{};
 
 
-
+/*
 std::shared_ptr<unsigned int> ECS::VaoMap::RegisterVaoEntriesArray(std::string& a_Node_fullindexedname, const GTech::Mesh& rMesh ){
     
     auto [absrespath, relrespath, resname] = GTech::filesystem::resolver::ResourceNameResolution(a_Node_fullindexedname);
@@ -32,4 +31,4 @@ std::shared_ptr<unsigned int> ECS::VaoMap::RegisterVaoEntriesArray(std::string& 
     vaoMap.insert(apair);
     return vaoMap[a_Node_fullindexedname];
 
-}
+}*/

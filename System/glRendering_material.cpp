@@ -7,7 +7,6 @@
 #include <FS/resolver.h>
 
 
-std::map<std::string, ECS::ShaderMaterialHeaderComponent> ECS::ShaderMaterialMap::materialMap{};
 
 
 std::shared_ptr<ECS::ShaderMaterialHeaderComponent_> ECS::ShaderMaterialMap::RegisterShaderMaterialHeaderEntriesArray(std::string& a_Node_Fullindexedname, const GTech::Mesh& rMesh, GTech::IdMap& idmap){
@@ -22,7 +21,7 @@ std::shared_ptr<ECS::ShaderMaterialHeaderComponent_> ECS::ShaderMaterialMap::Reg
     for (int triangleArrayIndex = 0; triangleArrayIndex < trianglearraysz; ++triangleArrayIndex){
         
         auto a_Material_Full_IndexedName        = absrespath + "/" + rMesh.triangleArray[triangleArrayIndex]->material;
-        auto materialresourcename_alreadyexists = materialMap.find(a_Material_Full_IndexedName) != materialMap.end();
+        auto materialresourcename_alreadyexists = false;
         
         if (!materialresourcename_alreadyexists) {
 
@@ -52,11 +51,11 @@ std::shared_ptr<ECS::ShaderMaterialHeaderComponent_> ECS::ShaderMaterialMap::Reg
             auto apair = std::make_pair(a_Material_Full_IndexedName, shadermaterialheadercomponentptr);
 
             //Register the map entry.
-            materialMap.insert(apair);
+            //materialMap.insert(apair);
 
         }
         
-        ptr_[triangleArrayIndex] = *materialMap[a_Material_Full_IndexedName];
+        //ptr_[triangleArrayIndex] = *materialMap[a_Material_Full_IndexedName];
     
     }
 

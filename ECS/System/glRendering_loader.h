@@ -7,7 +7,7 @@
 #include <memory>
 #include <string>
 
-
+#include <AssetManager/meshvaoarraymap.h>
 #include <ECS/Component/componentmanager.h>
 
 #ifdef __APPLE__
@@ -21,50 +21,23 @@
 #include <collader/node.h>
 #include <collader/scene.h>
 
-namespace GTECH {
-    
-    template <typename V, typename K, typename C>
-    class SolvableMap {
-        
-        std::map<K, std::weak_ptr<V>> m {};
-        C& context;
-        std::function<std::shared_ptr<V>(K, C&)> fresolution;
-        
-    public:
-        std::shared_ptr<V> operator[](const K& key){
-                
-            auto wp_v = m[key];
-            auto sp_v = wp_v.lock();
-                
-            if (!sp_v){
-                sp_v = fresolution(key, context);
-                m[key] = sp_v;
-            }
-            return sp_v;
-                
-        }
-        AssetMap(C& c, std::function<std::shared_ptr<V>(K, C&)>f ) : context(c), fresolution(f){}
-            
-             
-    };
-
-}
 namespace ECS {
     
 
 
     class RenderingDataManager {
 
+    	RenderingDataManager() = default;
 
-        static std::map<std::string, std::weak_ptr<unsigned int>> meshname_vaoarray_map; 
-        static std::map<std::string, std::weak_ptr<ECS::MaterialComponent>> meshname_materialarray_map;
 
     public:
 
+        GTech::MeshVaoArrayMap meshname_vaoarray_map;
+
         static RenderingDataManager& GetInstance(){
 
-            static RenderingDataManager rdm;
-            return rdm; 
+			static RenderingDataManager rdm;
+            return rdm;
 
         }
 

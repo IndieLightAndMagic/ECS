@@ -11,7 +11,6 @@
 #include <ECS/Component/texturecomponent.h>
 #include <ECS/Entity/entitymanager.h>
 #include <ECS/Component/entityinformationcomponent.h>
-#include <ECS/System/glRendering_vaomap.h>
 
 #include <collader/collader.h>
 

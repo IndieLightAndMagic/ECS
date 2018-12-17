@@ -1,6 +1,7 @@
 #ifndef __SCENERESOURCER_H__
 #define __SCENERESOURCER_H__
 
+#include <AssetManager/assetmanager.h>
 #include <AssetManager/meshvaoarraymap.h>
 #include <ECS/System/glRendering_loader.h>
 #include <ECS/System/glRendering_material.h>
@@ -20,17 +21,11 @@
 */
 namespace GTech {
 
-    using PairDocVisitor = std::pair<tinyxml2::XMLDocument, GTech::ColladaVisitor>;
-    using PairDocVisitorPtr = std::shared_ptr<PairDocVisitor>;
-    
-    
-    class ResourceManager : public  {
-
-
-        GTech::SceneResourceManagerMap sceneresourcemanagermap;
+    class ResourceManager {
 
         unsigned int LoadMesh(const GTech::Scene&, const GTech::Node&);
-    
+        GTech::SceneResourceManagerMap sceneresourcemanagermap{};
+        GTech::MeshVaoArrayMap meshvaoarraymap{};
     public:
         unsigned int Load(const std::string& resourceName);
         void UnLoad(const std::string& resourceName);

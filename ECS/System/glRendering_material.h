@@ -1,7 +1,7 @@
 #ifndef __GLRENDERING_MATERIAL_H__
 #define __GLRENDERING_MATERIAL_H__
 
-
+#include <ECS/Component/component.h>
 
 #include <map>
 #include <memory>

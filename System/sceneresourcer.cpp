@@ -1,5 +1,7 @@
 
+#include <utility>
 #include <memory>
+
 
 #include <ECS/System/sceneresourcer.h>
 #include <ECS/Entity/entitymanager.h>
@@ -16,33 +18,30 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceNameAndFile
     
     auto [absrespath, relrespath, resname] = GTech::filesystem::resolver::ResourceNameResolution(resourceNameAndFileName);
     auto nodefullindexedname               = absrespath + std::string{"/"} + resname;
-                                        
-    if (!GTech::ResourceManager::ResourceFileHasPairDocVisitorEntryRegistered(absrespath))
-        if (GTech::ResourceManager::RegisterPairDocVisitorEntry(absrespath) == false) return 0;
     
-    auto pPairDocVisitor = GTech::ResourceManager::GetPairDocVisitorPtr(absrespath);
-    auto visitor         = pPairDocVisitor->second;
-    auto scene           = visitor.GetScene();
-    auto nodefound       = scene.nodes.find(resname) != scene.nodes.end();
+    //Get pointer to scene               
+    auto pscene    = sceneresourcemanagermap[absrespath];
+    auto scene     = *pscene;
+
+    auto nodefound = scene.nodes.find(resname) != scene.nodes.end();
                                                                                                                                                                                                                                                                                                                                                          
     if (!nodefound) return 0;
 
     // Ok node was found... start creating components.
-    auto pnode = scene.nodes[resname];
+    auto pmap  = pscene->nodes;
+    auto pnode = pmap[resname];
     
     // Create Mtx Component and assign the node's transform matrix (a copy).
     // Invoke component manager.
-    auto& componentmngr = ECS::ComponentManager::GetInstance();
-    auto& entitymngr   = ECS::EntityManager::GetInstance();
+    auto [componentmngr, entitymngr] = std::make_pair(ECS::ComponentManager::GetInstance(), ECS::EntityManager::GetInstance()) ;
 
     //Create entity and get its info component
-    auto eid = entitymngr.CreateEntity(); //entityid
-    auto infocomponentid = entitymngr.GetComponentsIds(eid)[0];
-    auto infocomponentptr = componentmngr.GetComponentRaw<ECS::EntityInformationComponent_>(infocomponentid);
+    auto eid              = entitymngr.CreateEntity(); //entityid
+    auto infocomponentptr = componentmngr.GetComponentRaw<ECS::EntityInformationComponent_>(entitymngr.GetComponentsIds(eid)[0]);
 
     // Create Mtx Component using the component manager.
-    auto mtxcomponentid  = componentmngr.CreateComponent<ECS::MatrixComponent_>();
-    auto mtxcomponentptr = componentmngr.GetComponentRaw<ECS::MatrixComponent_>(mtxcomponentid);
+    auto mtxcomponentid     = componentmngr.CreateComponent<ECS::MatrixComponent_>();
+    auto mtxcomponentptr    = componentmngr.GetComponentRaw<ECS::MatrixComponent_>(mtxcomponentid);
     mtxcomponentptr->matrix = pnode->transform;
 
     entitymngr.AddComponent(eid, mtxcomponentid);    //Ok now we have a transform matrix. 
@@ -50,22 +49,10 @@ unsigned int GTech::ResourceManager::Load(const std::string& resourceNameAndFile
     // Ok 
     if (pnode->nodeType == GTech::Node::NodeType::MESH){
 
-        //VAO array component
-        auto vaoarraycomponentid  = componentmngr.CreateComponent<ECS::VaoArrayComponent_>();
-        auto vaoarraycomponentptr = componentmngr.GetComponentRaw<ECS::VaoArrayComponent_>(vaoarraycomponentid);
+        //Check if VAO (the geometry describing the mesh node) is already registered by the rendering system.
+        auto vao_sp = meshvaoarraymap[nodefullindexedname];
+        if (vao_sp) return eid;
 
-        //Allocate Vertex Array Objects VAO and with  VBOs and EBOs. Create a Vector with pointers and assign them to the component.
-        auto pmesh                                          = std::dynamic_pointer_cast<GTech::Mesh>(scene.urlPtrMap[pnode->url]);
-        auto vaoentriesarrayptr                             = vaoMap.RegisterVaoEntriesArray(nodefullindexedname, *pmesh); //Shared ptr to an array of VAO0...VAOI... VAON-1
-        auto shaderMaterialPtrVector                        = shaderMaterialMap.RegisterShaderMaterialHeaderEntriesArray(nodefullindexedname, *pmesh, scene.urlPtrMap); //Sharedptr to an array of Mat0...Mat
-
-        //Ok fill out the component (THIS IS HORRIBLE CODE, SHOULD BE ENHANCED SOME TIME)
-        vaoarraycomponentptr->wkptr_vaoarray                = vaoentriesarrayptr;
-        vaoarraycomponentptr->wkptr_materialheadercomponent = shaderMaterialPtrVector;
-        vaoarraycomponentptr->size                          = pmesh->triangleArray.size();
-
-        entitymngr.AddComponent(eid, vaoarraycomponentid);
-        infocomponentptr->SetGlGeometryTuple(mtxcomponentid, vaoarraycomponentid);
 
     } else if (pnode->nodeType == GTech::Node::NodeType::CAMERA){
 
@@ -126,7 +113,7 @@ void GTech::ResourceManager::UnLoad(const std::string &resourceName){
 
 void GTech::ResourceManager::ClearCache(){
 
-    map_SResourceName_PairDocVisitor.clear();
+    //map_SResourceName_PairDocVisitor.clear();
 
 }
 
