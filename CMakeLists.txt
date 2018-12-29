@@ -1,9 +1,10 @@
 #CMAKE TO MAKE A STATIC LIBRARY
 #HEADER
 cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
+set(CMAKE_C_COMPILER "/usr/bin/clang")
+set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 set(TARGET_NAME ECS)
 project(${TARGET_NAME})
-set(CMAKE_VERBOSE_MAKEFILE TRUE)
 set(CMAKE_CXX_STANDARD 17)
 
 #Installation directory 
@@ -43,6 +44,7 @@ add_library(${TARGET_NAME} STATIC
 	${CMAKE_SOURCE_DIR}/System/sceneresourcer.cpp 
 
 )
+set(CMAKE_VERBOSE_MAKEFILE TRUE)
 set(CMAKE_BUILD_TYPE debug)
 
 target_include_directories(${TARGET_NAME} PUBLIC 
